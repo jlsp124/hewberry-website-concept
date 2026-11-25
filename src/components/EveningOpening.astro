@@ -2,23 +2,54 @@
 import { route } from '../lib/site';
 ---
 
-<section class="evening" aria-labelledby="evening-title">
-  <picture class="evening__photo">
-    <source media="(max-width: 680px)" type="image/avif" srcset={`${route('images/story/porch-640.avif')} 640w, ${route('images/story/porch-960-mobile.avif')} 960w`} sizes="100vw" />
-    <source media="(max-width: 680px)" srcset={`${route('images/story/porch-640.webp')} 640w, ${route('images/story/porch-960-mobile.webp')} 960w`} sizes="100vw" />
-    <img src={route('images/story/porch-1600.webp')}
-      srcset={`${route('images/story/porch-1000.webp')} 1000w, ${route('images/story/porch-1600.webp')} 1600w, ${route('images/story/porch-2200.webp')} 2200w`}
-      sizes="(min-width: 1450px) 79vw, 100vw" width="2200" height="1467" fetchpriority="high"
-      alt="The warm light of a front porch at dusk" />
-  </picture>
-  <div class="evening__shade" aria-hidden="true"></div>
-  <div class="shell evening__inner">
-    <div class="evening__copy">
-      <h1 id="evening-title">Over 25 years <em>on the job.</em></h1>
-    </div>
-    <div class="evening__bottom">
-      <p>Security installation and 24/7 monitoring for Okanagan homes and businesses.</p>
-      <span class="scroll-note" aria-hidden="true"><span>↓</span> Scroll to follow an alarm</span>
+<section class="arrival" aria-labelledby="arrival-title" data-arrival>
+  <div class="arrival__frame" aria-hidden="true">
+    <picture>
+      <source media="(max-width: 650px)" type="image/avif" srcset={route('images/story/estate-portrait.avif')} />
+      <source media="(max-width: 650px)" srcset={route('images/story/estate-portrait.webp')} />
+      <img src={route('images/story/estate-poster.webp')} width="1840" height="1036" fetchpriority="high" alt="" />
+    </picture>
+    <video data-arrival-film data-src={route('images/story/estate-motion.mp4')} muted playsinline preload="none"></video>
+  </div>
+  <div class="arrival__grade" aria-hidden="true"></div>
+  <div class="shell arrival__inner">
+    <h1 id="arrival-title">
+      <span><span>Security where</span></span>
+      <span><span>we live and work.</span></span>
+    </h1>
+    <div class="arrival__bottom">
+      <p>Alarm and camera installation. 24/7 monitoring.<br />Over 25 years of experience in the Okanagan.</p>
+      <span class="arrival__cue" aria-hidden="true">Scroll to follow an alarm <span>↓</span></span>
     </div>
   </div>
 </section>
+
+<script>
+  import { clamp, seekOnScroll } from '../scripts/scroll-media';
+
+  const section = document.querySelector<HTMLElement>('[data-arrival]');
+  const film = section?.querySelector<HTMLVideoElement>('[data-arrival-film]');
+  if (section && film) {
+    const seek = seekOnScroll(film);
+    const motion = matchMedia('(prefers-reduced-motion: no-preference)');
+    let frame = 0;
+    function update() {
+      frame = 0;
+      if (!section || !motion.matches) return;
+      const rect = section.getBoundingClientRect();
+      const masthead = document.querySelector('header')?.getBoundingClientRect().bottom ?? 0;
+      if (rect.bottom <= masthead || rect.top >= innerHeight) return;
+      const progress = clamp((masthead - rect.top) / rect.height);
+      section.style.setProperty('--arrival-lift', `${progress * -18}%`);
+      section.style.setProperty('--arrival-dark', String(progress * .26));
+      if (progress > .015) seek(progress * .97);
+    }
+    function schedule() {
+      if (!frame && motion.matches) frame = requestAnimationFrame(update);
+    }
+    addEventListener('scroll', schedule, { passive: true });
+    addEventListener('resize', schedule, { passive: true });
+    motion.addEventListener('change', schedule);
+    schedule();
+  }
+</script>

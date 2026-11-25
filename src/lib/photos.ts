@@ -32,9 +32,17 @@ export const photos = {
   },
 } as const;
 
-export const openingPhoto = {
-  caption: 'Front porch at dusk · example property',
-  author: 'Curtis Adams',
-  source: 'https://www.pexels.com/photo/charming-stone-facade-house-at-dusk-36777965/',
-  ...pexels,
-};
+export const footage = {
+  exterior: {
+    caption: 'Modern home at sunset',
+    author: 'Alef Morais',
+    source: 'https://www.pexels.com/video/luxurious-modern-home-exterior-at-sunset-40807486/',
+    ...pexels,
+  },
+  doorway: {
+    caption: 'Opening a door',
+    author: 'Nazar Matveichev',
+    source: 'https://www.pexels.com/video/person-opening-and-closing-the-door-2108274/',
+    ...pexels,
+  },
+} as const;

@@ -1,211 +1,144 @@
-import type { createSignalModels } from './signal-models';
+import { clamp, seekOnScroll } from './scroll-media';
+import type { createHubModel } from './signal-models';
 
-const clamp = (value: number, low = 0, high = 1) => Math.max(low, Math.min(high, value));
-
-function easing(start: number, end: number, value: number) {
-  const fraction = clamp((value - start) / (end - start));
-  return fraction * fraction * (3 - 2 * fraction);
-}
-
-type Models = NonNullable<ReturnType<typeof createSignalModels>>;
+type HubModel = NonNullable<ReturnType<typeof createHubModel>>;
+const ease = (value: number) => value * value * (3 - 2 * value);
 
 export function initializeSignalStory(story: HTMLElement) {
   if (typeof IntersectionObserver !== 'function') return;
-  const stage = story.querySelector<HTMLElement>('[data-signal-stage]');
-  const canvas = story.querySelector<HTMLCanvasElement>('[data-signal-canvas]');
-  const slots = Array.from(story.querySelectorAll<HTMLElement>('[data-signal-slot]'));
-  const state = story.querySelector<HTMLElement>('[data-signal-status-label]');
-  const door = story.querySelector<HTMLButtonElement>('[data-signal-door]');
-  const doorLabel = story.querySelector<HTMLElement>('[data-signal-door-label]');
-  const announcement = story.querySelector<HTMLElement>('[data-signal-door-announcement]');
-  if (!stage || !canvas || !state || !door || !doorLabel || !announcement || slots.length !== 3) return;
+  const screen = story.querySelector<HTMLElement>('[data-alarm-screen]');
+  const scenes = Array.from(story.querySelectorAll<HTMLElement>('[data-alarm-scene]'));
+  const door = story.querySelector<HTMLVideoElement>('[data-door-film]');
+  const hub = story.querySelector<HTMLElement>('[data-hub-stage]');
+  const canvas = story.querySelector<HTMLCanvasElement>('[data-hub-canvas]');
+  const header = document.querySelector('header');
+  if (!screen || !door || !hub || !canvas || !header || scenes.length !== 3) return;
 
-  const motion = matchMedia('(prefers-reduced-motion: no-preference)');
-  const pointer = matchMedia('(hover: hover) and (pointer: fine)');
-  let models: Models | null = null;
-  let near = false;
-  let visible = false;
-  let loading = false;
-  let unavailable = false;
+  const motion = matchMedia('(min-height: 520px) and (prefers-reduced-motion: no-preference)');
+  const pointer = matchMedia('(pointer: fine) and (hover: hover)');
+  const seekDoor = seekOnScroll(door);
   let frame = 0;
-  let previous = 0;
-  let active = -1;
-  let width = 0;
-  let height = 0;
-  let progress = 0;
-  let opening = 0;
-  let manualOpening: boolean | null = null;
+  let showing = false;
+  let current = -1;
+  let entering = -1;
+  let model: HubModel | null = null;
+  let loadingHub = false;
+  let unavailable = false;
   let mouseX = 0;
   let mouseY = 0;
   let pointX = 0;
   let pointY = 0;
-  let entered: Animation | null = null;
-
-  function updateDoor(open: boolean) {
-    if (state!.dataset.open === String(open)) return;
-    state!.textContent = open ? 'Door open' : 'Door closed';
-    state!.dataset.open = String(open);
-    doorLabel!.textContent = open ? 'Close the door' : 'Open the door';
-  }
-
-  function currentShot() {
-    const height = window.innerHeight;
-    const anchor = height * .51;
-    const frames = slots.map((slot, index) => ({ index, rect: slot.getBoundingClientRect() }));
-    return frames
-      .filter(({ rect }) => rect.bottom > 0 && rect.top < height)
-      .reduce<(typeof frames)[number] | null>((current, shot) => {
-        const distance = (rect: DOMRect) => Math.abs(rect.top + rect.height * .5 - anchor);
-        return !current || distance(shot.rect) < distance(current.rect) ? shot : current;
-      }, null);
-  }
-
-  function placeCanvas(rect: DOMRect) {
-    const origin = story.getBoundingClientRect();
-    // Viewport-to-document rectangle tracking adapted from Lusion's MIT WebGL Scroll Sync demo.
-    // The section is the origin here, so the scroll offset cancels out.
-    const x = rect.left - origin.left;
-    const y = rect.top - origin.top;
-    stage!.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-    if (Math.abs(rect.width - width) < .1 && Math.abs(rect.height - height) < .1) return;
-    width = rect.width;
-    height = rect.height;
-    stage!.style.width = `${width}px`;
-    stage!.style.height = `${height}px`;
-    models!.size(width, height);
-  }
-
-  function update(time: number) {
-    frame = 0;
-    if (!models || !motion.matches || !visible || document.hidden) return;
-    const shot = currentShot();
-    if (!shot || shot.index === 2) {
-      stage!.hidden = true;
-      stage!.dataset.beat = shot ? 'response' : '';
-      active = -1;
-      manualOpening = null;
-      updateDoor(false);
-      return;
-    }
-
-    const { index, rect } = shot;
-    const target = clamp((window.innerHeight * .56 - rect.top) / rect.height);
-    const dt = previous ? clamp((time - previous) / 1000, .004, .06) : .03;
-    previous = time;
-    const amount = 1 - Math.exp(-dt * 12);
-    const changed = index !== active;
-    if (changed) {
-      active = index;
-      manualOpening = null;
-      pointX = pointY = mouseX = mouseY = 0;
-      progress = target;
-      opening = index === 0 ? easing(.65, .97, progress) * .65 : 0;
-      stage!.dataset.beat = index === 0 ? 'door' : 'hub';
-    }
-
-    placeCanvas(rect);
-    progress += (target - progress) * amount;
-    const nextOpening = index === 0
-      ? manualOpening === null ? easing(.65, .97, progress) * .65 : Number(manualOpening)
-      : 0;
-    opening += (nextOpening - opening) * amount;
-    pointX += (mouseX - pointX) * amount;
-    pointY += (mouseY - pointY) * amount;
-    if (index === 0) updateDoor(opening > .32);
-
-    const timeline = index === 0 ? .12 + progress * .56 : 1.19 + progress * .55;
-    models.render(timeline, opening, pointX, pointY);
-    stage!.hidden = false;
-    if (changed) {
-      entered?.cancel();
-      entered = stage!.animate?.(
-        [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }],
-        { duration: 430, easing: 'cubic-bezier(.22,.67,.25,1)' },
-      ) ?? null;
-    }
-
-    if (Math.abs(target - progress) > .001 || Math.abs(nextOpening - opening) > .001
-      || Math.abs(mouseX - pointX) + Math.abs(mouseY - pointY) > .003) schedule();
-  }
+  let lastProgress = 0;
 
   function schedule() {
-    if (!frame && visible && models && motion.matches) frame = requestAnimationFrame(update);
+    if (!frame && showing && story.dataset.flow === 'true') frame = requestAnimationFrame(update);
   }
 
   function syncPreference() {
-    if (unavailable || !motion.matches) {
-      delete story.dataset.webgl;
-      stage!.hidden = door!.hidden = state!.hidden = true;
+    // Direct chapter links can enter the ordinary reading layout at their heading.
+    const directChapter = /^#signal-(?:door|hub|response)$/.test(location.hash);
+    if (!motion.matches || directChapter) {
+      delete story.dataset.flow;
       return;
     }
-    if (models) {
-      story.dataset.webgl = 'true';
-      door!.hidden = state!.hidden = false;
-      schedule();
-      return;
-    }
-    if (!near || loading) return;
-    loading = true;
-    void import('./signal-models').then(({ createSignalModels }) => {
-      models = createSignalModels(canvas!, schedule);
-      unavailable = !models;
+    story.dataset.flow = 'true';
+    schedule();
+  }
+
+  function sizeHub() {
+    if (!model) return;
+    const { width, height } = hub!.getBoundingClientRect();
+    model.size(width, height);
+    schedule();
+  }
+
+  function loadHub() {
+    if (model || loadingHub || unavailable) return;
+    loadingHub = true;
+    void import('./signal-models').then(({ createHubModel }) => {
+      model = createHubModel(canvas!);
+      unavailable = !model;
     }).catch(() => { unavailable = true; }).finally(() => {
-      loading = false;
-      syncPreference();
+      loadingHub = false;
+      if (model) {
+        sizeHub();
+        model.render(0, 0, 0);
+        hub!.dataset.rendered = 'true';
+        schedule();
+      }
     });
   }
 
-  const threshold = .045;
-  const prepare = new IntersectionObserver(([entry]) => {
-    if (entry.intersectionRatio < threshold) return;
-    near = true;
-    syncPreference();
-    prepare.disconnect();
-  }, { threshold });
-  prepare.observe(story);
+  function update() {
+    frame = 0;
+    if (!showing || story.dataset.flow !== 'true' || document.hidden) return;
+    const height = screen!.offsetHeight;
+    if (!height) return;
+    const top = header!.getBoundingClientRect().bottom;
+    const bounds = story.getBoundingClientRect();
+    const progress = clamp((top - bounds.top) / height, 0, scenes.length - .001);
+    const index = Math.floor(progress);
+    const phase = progress - index;
+    const next = index < scenes.length - 1 && phase > .77 ? index + 1 : -1;
+    const reveal = next < 0 ? 0 : ease(clamp((phase - .77) / .23));
+    const outgoing = next < 0 ? 0 : ease(clamp((phase - .77) / .085));
+
+    if (index !== current || next !== entering) {
+      current = index;
+      entering = next;
+      story.dataset.chapter = String(index);
+      scenes.forEach((scene, i) => {
+        scene.dataset.layer = i === index ? 'current' : i === next ? 'incoming' : 'inactive';
+      });
+    }
+    scenes[index].style.setProperty('--scene-phase', String(phase));
+    scenes[index].style.setProperty('--scene-copy', String(1 - outgoing));
+    scenes[index].style.setProperty('--copy-shift', `${-outgoing * 18}px`);
+    if (next >= 0) {
+      const arrival = ease(clamp((reveal - .63) / .34));
+      scenes[next].style.setProperty('--scene-edge', `${100 - reveal * 104}%`);
+      scenes[next].style.setProperty('--scene-phase', '0');
+      scenes[next].style.setProperty('--scene-copy', String(arrival));
+      scenes[next].style.setProperty('--copy-shift', `${(1 - arrival) * 20}px`);
+    }
+
+    if (index === 0 && bounds.top < innerHeight * .93) seekDoor(clamp((phase - .11) / .63));
+    if (index === 1 || next === 1 || (index === 0 && phase > .66)) loadHub();
+    if (index === 1 || next === 1) {
+      pointX += (mouseX - pointX) * .14;
+      pointY += (mouseY - pointY) * .14;
+      model?.render(index === 1 ? phase : 0, pointX, pointY);
+    }
+    lastProgress = progress;
+    if (Math.abs(mouseX - pointX) + Math.abs(mouseY - pointY) > .012 && index === 1) schedule();
+  }
 
   new IntersectionObserver(([entry]) => {
-    visible = entry.isIntersecting;
-    previous = 0;
+    showing = entry.isIntersecting;
     schedule();
-  }).observe(story);
+  }, { rootMargin: '80px 0px' }).observe(story);
+  if (typeof ResizeObserver === 'function') new ResizeObserver(sizeHub).observe(hub);
 
-  if (typeof ResizeObserver === 'function') {
-    const observer = new ResizeObserver(schedule);
-    slots.forEach((slot) => observer.observe(slot));
-  }
+  addEventListener('scroll', schedule, { passive: true });
+  addEventListener('resize', schedule, { passive: true });
+  addEventListener('hashchange', syncPreference);
   motion.addEventListener('change', syncPreference);
   document.addEventListener('visibilitychange', schedule);
-  window.addEventListener('resize', schedule, { passive: true });
-  window.addEventListener('scroll', schedule, { passive: true });
-
-  story.addEventListener('pointermove', (event) => {
-    if (!pointer.matches || event.pointerType !== 'mouse' || active < 0) return;
-    const slot = slots[active];
-    if (event.target instanceof Node && slot.contains(event.target)) {
-      const rect = slot.getBoundingClientRect();
-      // Keep the response inside the artwork. The local clamp is adapted from ObsidianUI's MIT hover-img.
-      const x = Math.max(0, Math.min(rect.width, event.clientX - rect.left));
-      const y = Math.max(0, Math.min(rect.height, event.clientY - rect.top));
-      mouseX = x / rect.width * 2 - 1;
-      mouseY = y / rect.height * 2 - 1;
-    } else {
-      mouseX = mouseY = 0;
-    }
+  hub.addEventListener('pointermove', (event) => {
+    if (!pointer.matches || event.pointerType !== 'mouse' || Math.floor(lastProgress) !== 1) return;
+    const rect = hub.getBoundingClientRect();
+    mouseX = clamp((event.clientX - rect.x) / rect.width) * 2 - 1;
+    mouseY = clamp((event.clientY - rect.y) / rect.height) * 2 - 1;
     schedule();
   }, { passive: true });
-  story.addEventListener('pointerleave', () => {
+  hub.addEventListener('pointerleave', () => {
     mouseX = mouseY = 0;
-    schedule();
-  });
-
-  door.addEventListener('click', () => {
-    manualOpening = !(manualOpening ?? opening > .32);
-    announcement.textContent = manualOpening ? 'Door opened. The sensor sends a signal to the hub.' : 'Door closed.';
     schedule();
   });
   canvas.addEventListener('webglcontextlost', () => {
     unavailable = true;
-    syncPreference();
+    model = null;
+    delete hub.dataset.rendered;
   });
+  syncPreference();
 }

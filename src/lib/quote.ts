@@ -22,5 +22,5 @@ export function quotePath(
   const query = new URLSearchParams();
   if (property) query.set('property', property);
   if (priority) query.set('priority', priority);
-  return query.size ? 'quote/?' + query : 'quote/';
+  return query.size ? 'contact/?' + query : 'contact/';
 }

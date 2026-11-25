@@ -1,75 +1,57 @@
 ---
 import { route } from '../lib/site';
-
-const chapters = [
-  {
-    key: 'door',
-    label: 'Detection',
-    title: 'The door opens.',
-    text: 'When the alarm is armed, the door sensor detects the opening and tells the system.',
-    model: 'Ajax DoorProtect',
-    image: 'door-still.webp',
-    alt: 'An Ajax sensor and magnet on opposite sides of a door frame',
-  },
-  {
-    key: 'hub',
-    label: 'Alert',
-    title: 'The signal goes out.',
-    text: 'The hub connects the equipment at your property. If you have monitoring, it sends the alert to the monitoring centre.',
-    model: 'Ajax Hub 2',
-    image: 'hub-still.webp',
-    alt: 'An Ajax Hub with a smooth square face and rounded corners',
-  },
-  {
-    key: 'response',
-    label: '24/7 monitoring',
-    title: 'A person answers.',
-    text: 'An operator sees which alarm came in and follows the contact instructions you’ve set for your property.',
-    model: 'Monitoring example',
-    image: 'response-still.webp',
-    alt: 'A phone showing an Ajax system beside its alarm hub',
-  },
-];
 ---
 
-<section class="signal-story" id="system" data-signal-story aria-label="How a monitored alarm works">
-  <div class="signal-stage" aria-hidden="true" data-signal-stage hidden><canvas data-signal-canvas></canvas></div>
-  <div class="shell signal-steps">
-    {chapters.map(({ key, label, title, text, model, image, alt }, index) => (
-      <article id={`signal-${key}`} class:list={['signal-step', `signal-step--${key}`]} data-signal-step={index} aria-labelledby={`signal-title-${key}`}>
-        <div class="signal-step__body">
-          <p class="story-label">{label}</p>
-          <h2 id={`signal-title-${key}`}>{title}</h2>
-          <p class="signal-step__text">{text}</p>
-          {key === 'door' && (
-            <button class="signal-step__action" type="button" data-signal-door hidden>
-              <span class="signal-step__action-icon" aria-hidden="true">↗</span><span data-signal-door-label>Open the door</span>
-            </button>
-            <p class="visually-hidden" data-signal-door-announcement role="status"></p>
-          )}
+<section class="alarm-film" id="system" data-alarm-film aria-label="How a monitored alarm works">
+  <div class="alarm-film__screen" data-alarm-screen>
+    <article id="signal-door" class="alarm-scene alarm-scene--door" aria-labelledby="signal-title-door" data-alarm-scene data-layer="current">
+      <div class="alarm-scene__field" aria-hidden="true">
+        <img src={route('images/story/door-film-poster.webp')} alt="" width="1120" height="630" decoding="async" loading="lazy" />
+        <video data-door-film data-src={route('images/story/door-motion.mp4')} muted playsinline preload="none"></video>
+      </div>
+      <div class="shell alarm-scene__inside">
+        <div class="alarm-scene__copy">
+          <p class="signal-eyebrow">Detection</p>
+          <h2 id="signal-title-door">It starts<br class="alarm-line-break" /> at the door.</h2>
+          <p>When the system is armed, a sensor such as Ajax DoorProtect detects an opening and tells the hub.</p>
         </div>
-        <figure class="signal-step__image">
-          <div class="signal-shot" data-signal-slot={key}>
-            <img src={route('images/story/' + image)} alt={alt} width="960" height="640" loading="lazy" decoding="async" />
-            {key === 'response' && <div class="signal-receipt" aria-hidden="true">
-              <div class="signal-receipt__route"><span></span> Monitoring centre</div>
-              <strong>Front door alarm</strong>
-              <p>Alert received · Contact plan started</p>
-            </div>}
-          </div>
-          <figcaption>
-            <span>{model}</span>
-            {key === 'door' && <span class="signal-stage__status" data-signal-status-label hidden>Door closed</span>}
-          </figcaption>
+      </div>
+    </article>
+    <article id="signal-hub" class="alarm-scene alarm-scene--hub" aria-labelledby="signal-title-hub" data-alarm-scene data-layer="inactive">
+      <div class="shell alarm-scene__inside">
+        <figure class="alarm-scene__hardware" data-hub-stage>
+          <img src={route('images/story/devices/hub-2.webp')} alt="A square Ajax Hub 2 alarm control panel" width="820" height="650" decoding="async" loading="lazy" />
+          <canvas data-hub-canvas aria-hidden="true"></canvas>
         </figure>
-      </article>
-    ))}
+        <div class="alarm-scene__copy">
+          <p class="signal-eyebrow">Ajax Hub 2</p>
+          <h2 id="signal-title-hub">The signal<br class="alarm-line-break" /> goes out.</h2>
+          <p>The hub connects the devices around your property. With monitoring, it sends the alert to the monitoring centre.</p>
+        </div>
+      </div>
+    </article>
+    <article id="signal-response" class="alarm-scene alarm-scene--response" aria-labelledby="signal-title-response" data-alarm-scene data-layer="inactive">
+      <div class="alarm-scene__field" aria-hidden="true">
+        <img src={route('images/story/response-still.webp')} alt="" width="1120" height="770" decoding="async" loading="lazy" />
+      </div>
+      <div class="shell alarm-scene__inside">
+        <div class="alarm-scene__copy">
+          <p class="signal-eyebrow">24/7 monitoring</p>
+          <h2 id="signal-title-response">A person<br class="alarm-line-break" /> answers.</h2>
+          <p>An operator sees which alarm came in and follows the contact instructions you’ve set for your property.</p>
+        </div>
+        <div class="alarm-scene__notice" aria-hidden="true">
+          <span>Monitoring centre</span>
+          <strong>Alert received.</strong>
+        </div>
+      </div>
+    </article>
   </div>
 </section>
 
 <script>
   import { initializeSignalStory } from '../scripts/signal-story';
 
-  const story = document.querySelector<HTMLElement>('[data-signal-story]');
+  const story = document.querySelector<HTMLElement>('[data-alarm-film]');
   if (story) initializeSignalStory(story);
 </script>

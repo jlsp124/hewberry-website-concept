@@ -2,20 +2,17 @@
 import { company, route } from '../lib/site';
 ---
 
-<section class="evening-contact" id="contact" tabindex="-1" aria-labelledby="evening-contact-title">
-  <picture class="evening-contact__photo">
-    <source media="(max-width: 680px)" srcset={route('images/story/valley-720.webp')} />
-    <img src={route('images/story/valley-1920.webp')} alt="Evening light over the water near Vernon" width="1920" height="1080" loading="lazy" decoding="async" />
-  </picture>
-  <div class="evening-contact__shade" aria-hidden="true"></div>
-  <div class="shell evening-contact__inner">
+<section class="arrival-close" id="services" aria-labelledby="arrival-close-title">
+  <div class="shell arrival-close__inner">
     <div>
-      <h2 id="evening-contact-title">Let’s talk security.</h2>
-      <p>Tell us what you’d like to protect. We’ll talk through your property and what an installation could look like.</p>
+      <blockquote>“Hewberry Alarms provided excellent and timely service, advising us on the best options for our new home…”</blockquote>
+      <p class="arrival-close__credit"><strong>Jack Ledbetter</strong> · Homeowner</p>
     </div>
-    <div class="evening-contact__actions">
-      <a class="evening-contact__quote" href={route('quote/')}>Get a quote <span aria-hidden="true">↗</span></a>
-      <a class="evening-contact__phone" href={company.telephone}>{company.phone}</a>
+    <div id="contact" class="arrival-close__next">
+      <h2 id="arrival-close-title">Let’s talk security.</h2>
+      <a href={route('systems/')}>Explore systems <span aria-hidden="true">↗</span></a>
+      <a href={route('contact/')}>Contact Hewberry <span aria-hidden="true">↗</span></a>
+      <a class="arrival-close__phone" href={company.telephone}>{company.phone}</a>
     </div>
   </div>
 </section>

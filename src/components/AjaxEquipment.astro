@@ -3,95 +3,91 @@ import { ajaxDevices, ajaxGroups } from '../lib/ajax-devices';
 import { route } from '../lib/site';
 import '../styles/equipment.css';
 
-const firstDevice = ajaxDevices[0];
+const categories = [{ id: 'all', label: 'All' }, ...ajaxGroups];
+const contexts: Record<string, string> = {
+  doorprotect: 'door-still.webp',
+  'hub-2': 'hub-still.webp',
+  'keypad-plus': 'business-1400.webp',
+  motioncam: 'motioncam-installed.webp',
+  turretcam: 'turretcam-installed.webp',
+};
 ---
 
-<section class="system-index" id="ajax-equipment" tabindex="-1" aria-labelledby="systems-title" data-equipment-index>
+<section class="equipment-gallery" id="equipment" aria-labelledby="equipment-title" data-equipment-gallery>
   <div class="shell">
-    <div class="system-index__intro">
-      <h2 id="systems-title">Equipment examples.</h2>
-      <p>Compare Ajax devices and what they do. Hewberry can help choose a system for your property.</p>
+    <div class="equipment-gallery__intro">
+      <h2 id="equipment-title">A closer look.</h2>
+      <p>Examples from Ajax Systems, from a sensor at the door to the hub that connects it all.</p>
     </div>
-
-    <div class="system-index__layout">
-      <figure class="equipment-view" aria-hidden="true">
-        <img src={route(`images/story/devices/${firstDevice.id}.webp`)}
-          width="820" height="650" alt="" loading="lazy" decoding="async" data-equipment-view-image />
-        <figcaption><span>Ajax Systems</span><strong data-equipment-view-name>{firstDevice.name}</strong></figcaption>
-      </figure>
-
-      <div class="equipment-list">
-        <div class="equipment-filter" role="group" aria-label="Equipment category" hidden data-equipment-filter>
-          {ajaxGroups.map(({ id, label }) => (
-            <button type="button" aria-controls="equipment-options" aria-pressed={id === firstDevice.group ? 'true' : 'false'} data-equipment-category={id}>{label}</button>
-          ))}
-        </div>
-        <table id="equipment-options" class="equipment-options">
-          <caption class="visually-hidden">Ajax equipment examples and their uses</caption>
-          <thead><tr><th scope="col">Equipment</th><th scope="col">What it does</th></tr></thead>
-          <tbody>
-            {ajaxDevices.map((device) => (
-              <tr data-equipment-row={device.group}
-                data-device={device.name}
-                data-device-image={route(`images/story/devices/${device.id}.webp`)}>
-                <th scope="row">
-                  <span>
-                    <img src={route(`images/story/devices/${device.id}-thumb.webp`)} width="116" height="90" alt="" loading="lazy" decoding="async" />
-                    {device.name}
-                  </span>
-                </th>
-                <td>{device.purpose}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p class="equipment-list__note">Equipment shown is representative. Hewberry can help choose what fits your property.</p>
-      </div>
+    <div class="equipment-gallery__filters" role="group" aria-label="Equipment category" data-gallery-filters hidden>
+      {categories.map(({ id, label }) => (
+        <button type="button" data-gallery-filter={id} aria-controls="equipment-collection" aria-pressed={id === 'all' ? 'true' : 'false'}>{label}</button>
+      ))}
     </div>
+    <p class="visually-hidden" data-gallery-count role="status"></p>
+    <ul class="equipment-collection" id="equipment-collection">
+      {ajaxDevices.map((device, index) => (
+        <li data-gallery-item={device.group} data-wide={String(index % 4 === 0 || index % 4 === 3)}>
+          <figure>
+            <div class="equipment-card__media" data-gallery-media>
+              <img class="equipment-card__image" src={route(`images/story/devices/${device.id}.webp`)} alt={`Ajax ${device.name}`} width="820" height="650" loading="lazy" decoding="async" />
+              {contexts[device.id] && <img class="equipment-card__context" src={route(`images/story/${contexts[device.id]}`)} alt="" width="1120" height="770" loading="lazy" decoding="async" />}
+            </div>
+            <figcaption class="equipment-card__caption">
+              <h3>{device.name}</h3>
+              <p>{device.purpose}</p>
+            </figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
   </div>
 </section>
 
 <script>
-  const equipment = document.querySelector<HTMLElement>('[data-equipment-index]');
-  const filters = equipment?.querySelector<HTMLElement>('[data-equipment-filter]');
-  const buttons = filters?.querySelectorAll<HTMLButtonElement>('[data-equipment-category]');
-  const rows = equipment?.querySelectorAll<HTMLTableRowElement>('[data-equipment-row]');
-  const image = equipment?.querySelector<HTMLImageElement>('[data-equipment-view-image]');
-  const name = equipment?.querySelector<HTMLElement>('[data-equipment-view-name]');
-  const previewPointer = matchMedia('(hover: hover) and (pointer: fine)');
-  const previewScreen = matchMedia('(min-width: 900px)');
+  const gallery = document.querySelector<HTMLElement>('[data-equipment-gallery]');
+  if (gallery) {
+    const filters = gallery.querySelector<HTMLElement>('[data-gallery-filters]');
+    const buttons = Array.from(gallery.querySelectorAll<HTMLButtonElement>('[data-gallery-filter]'));
+    const items = Array.from(gallery.querySelectorAll<HTMLElement>('[data-gallery-item]'));
+    const count = gallery.querySelector<HTMLElement>('[data-gallery-count]');
+    const precision = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+    let selection = 0;
 
-  if (filters && buttons?.length && rows?.length && image && name) {
-    function show(row: HTMLTableRowElement) {
-      const source = row.dataset.deviceImage;
-      if (!source || !previewScreen.matches || !image || !name) return;
-      image.dataset.requested = source;
-      if (image.getAttribute('src') === source) return;
-      const next = new Image();
-      next.src = source;
-      void next.decode().then(() => {
-        if (image.dataset.requested !== source) return;
-        image.src = source;
-        name.textContent = row.dataset.device ?? '';
-      }).catch(() => {});
+    for (const button of buttons) {
+      button.addEventListener('click', async () => {
+        const filter = button.dataset.galleryFilter;
+        const request = ++selection;
+        const matches = items.filter((item) => filter === 'all' || item.dataset.galleryItem === filter);
+        await Promise.all(matches.slice(0, 2).map(async (item) => {
+          const image = item.querySelector<HTMLImageElement>('.equipment-card__image');
+          if (!image) return;
+          image.loading = 'eager';
+          try { await image.decode(); } catch { /* The caption remains available if its image fails. */ }
+        }));
+        if (request !== selection) return;
+        let shown = 0;
+        for (const item of items) {
+          item.hidden = filter !== 'all' && item.dataset.galleryItem !== filter;
+          if (!item.hidden) {
+            item.dataset.wide = String(shown % 4 === 0 || shown % 4 === 3);
+            shown++;
+          }
+        }
+        buttons.forEach((choice) => choice.setAttribute('aria-pressed', String(choice === button)));
+        if (count) count.textContent = `${shown} equipment examples shown.`;
+      });
     }
+    if (filters) filters.hidden = false;
 
-    function choose(button: HTMLButtonElement) {
-      buttons?.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
-      rows?.forEach((row) => { row.hidden = row.dataset.equipmentRow !== button.dataset.equipmentCategory; });
-      const first = Array.from(rows ?? []).find((row) => !row.hidden);
-      if (first) show(first);
-    }
-
-    buttons.forEach((button) => button.addEventListener('click', () => choose(button)));
-    rows.forEach((row) => row.addEventListener('pointerenter', () => {
-      if (previewPointer.matches) show(row);
-    }));
-    previewScreen.addEventListener('change', () => {
-      const active = Array.from(buttons).find((button) => button.getAttribute('aria-pressed') === 'true');
-      if (active) choose(active);
-    });
-    choose(buttons[0]);
-    filters.hidden = false;
+    gallery.addEventListener('pointermove', (event) => {
+      if (!precision.matches || event.pointerType !== 'mouse' || !(event.target instanceof Element)) return;
+      const media = event.target.closest<HTMLElement>('[data-gallery-media]');
+      if (!media) return;
+      const bounds = media.getBoundingClientRect();
+      // Relative pointer coordinates adapted from ObsidianUI's MIT hover image effect.
+      const x = Math.max(0, Math.min(bounds.width, event.clientX - bounds.left));
+      media.style.setProperty('--equipment-reveal', `${x / bounds.width * 40 + 48}%`);
+    }, { passive: true });
   }
 </script>

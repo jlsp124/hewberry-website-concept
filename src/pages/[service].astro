@@ -1,6 +1,5 @@
 ---
 import Site from '../layouts/Site.astro';
-import AjaxEquipment from '../components/AjaxEquipment.astro';
 import EquipmentCatalogue from '../components/EquipmentCatalogue.astro';
 import Monitoring from '../components/Monitoring.astro';
 import Photo from '../components/Photo.astro';
@@ -18,7 +17,7 @@ const monitoring = service.slug === 'monitoring';
 <Site title={service.label} description={service.description}>
   <section class:list={['page-lead', service.photo && 'page-lead--photo']} aria-labelledby="page-title">
     <div class="shell">
-      <a class="breadcrumb" href={route('#services')}><span aria-hidden="true">←</span> All services</a>
+      <a class="breadcrumb" href={route('systems/')}><span aria-hidden="true">←</span> All systems</a>
       <div class="page-lead__grid">
         <div>
           <p class="eyebrow">{service.label}</p>
@@ -45,7 +44,14 @@ const monitoring = service.slug === 'monitoring';
       </ul>
     </div>
   </section>}
-  {service.slug === 'technology' && <AjaxEquipment />}
+  {service.slug === 'technology' && (
+    <section id="ajax-equipment" class="detail-list section-space" aria-labelledby="equipment-link-title">
+      <div class="shell detail-layout">
+        <h2 class="display" id="equipment-link-title">See the Ajax equipment.</h2>
+        <p><a class="inline-link" href={route('systems/#equipment')}>Browse the equipment gallery <span aria-hidden="true">↗</span></a></p>
+      </div>
+    </section>
+  )}
   {service.slug === 'technology' && (
     <section class="station-note section-space">
       <div class="shell detail-layout">

@@ -1,15 +1,15 @@
 ---
 import Site from '../layouts/Site.astro';
-import { openingPhoto, photos } from '../lib/photos';
+import { footage, photos } from '../lib/photos';
 
-const images = [['home-at-dusk', openingPhoto], ...Object.entries(photos)] as const;
+const images = [...Object.entries(footage), ...Object.entries(photos)] as const;
 ---
-<Site title="Photography credits" description="Sources, photographers and reuse terms for the photographs in the Hewberry Alarms website concept.">
+<Site title="Media credits" description="Sources and creators of photography and footage for the Hewberry Alarms website concept.">
   <section class="page-lead">
     <div class="shell">
       <p class="eyebrow">About this concept</p>
-      <h1 class="display">Photography credits.</h1>
-      <p class="page-lead__text">The photographs are illustrative and show real properties and places. The preview’s source repository records their licences.</p>
+      <h1 class="display">Media credits.</h1>
+      <p class="page-lead__text">The photos and footage show real places in an illustrative story. The source repository records their licences.</p>
     </div>
   </section>
   <section class="section-space">
@@ -25,7 +25,7 @@ const images = [['home-at-dusk', openingPhoto], ...Object.entries(photos)] as co
         ))}
         <article>
           <h2>Equipment and installation imagery</h2>
-          <p>Ajax Systems public press and product imagery. The alarm walkthrough uses original 3D illustrations of the DoorProtect sensor and Hub 2.</p>
+          <p>Ajax Systems public press and product imagery. The alarm walkthrough includes an original 3D illustration of the Hub 2.</p>
         </article>
       </div>
     </div>

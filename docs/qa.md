@@ -1,5 +1,15 @@
 # Verification
 
+## Navy film, Systems and Contact
+
+The static build generates thirteen pages. The Chromium suite checks that Systems and Contact navigate to different documents, that a supported browser runs the native page transition, and that the contact form validates and simulates an enquiry without making a submission request. The previous quote URL opens the same simple form.
+
+The three film chapters were inspected at desktop, phone and wide viewport sizes. After the masthead, each chapter occupied the full viewport. The tests verify that scroll advances and reverses the footage, reveals the next shot at the chapter boundary, and turns the hub on in its own scene. There are no door controls or door-status labels in the story. Reduced motion and narrow landscape use the three still scenes in document order. WebKit at 390 px and a 3× pixel ratio decoded and sought the doorway footage, rendered the hub and opened both new routes.
+
+The gallery was checked with pointer reveals and mobile filters. Gallery changes hold the previous images until the first images in the chosen category have decoded. The contact page was visually checked on direct entry and from Systems. Its document bottom matched the footer in both cases.
+
+A local Lighthouse 13.6 mobile run scored 100, with 1.81 s LCP and zero layout shift. The run requested neither film nor the 3D bundle during the initial page load. These are lab measurements.
+
 ## Editorial refinement
 
 All eight browser scenarios passed. The suite verifies the sourced figure, the equipment page, the installation preview on hover, the quote simulation, and canvas alignment after resizing an already open window. Reduced motion and script-free reading remain covered.
