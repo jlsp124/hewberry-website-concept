@@ -1,6 +1,6 @@
 # Hewberry Alarms website concept
 
-Independent, public redesign demonstration for a Vernon security installer. It preserves the published company mark and adds dedicated service, monitoring, company and customer support pages. The guided quote simulates a submission using non-identifying service choices held only on the current page.
+Independent, public redesign demonstration for a Vernon security installer. It preserves the published company mark and adds a photographed walkthrough of a security system, a 14-model equipment guide, dedicated service pages and customer support. The guided quote simulates a submission using non-identifying service choices held only on the current page.
 
 [Open the live concept](https://jlsp124.github.io/hewberry-website-concept/)
 
@@ -13,7 +13,7 @@ npm ci
 npm run dev
 ```
 
-Visit `http://localhost:4321/hewberry-website-concept/`. To examine the deployable build:
+Visit `http://localhost:4321/hewberry-website-concept/`. To verify the deployable build, run the type check, build and browser suite.
 
 ```sh
 npm run check
@@ -28,9 +28,9 @@ Tests can use an existing Chrome install through `HEWBERRY_BROWSER=chrome`. Set 
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Overview, service chooser and monitoring explanation |
+| `/` and `/#system` | Overview, five illustrated system chapters and service chooser |
 | `/residential/`, `/commercial/`, `/construction/` | Project-specific guides and prefilled quote routes |
-| `/monitoring/`, `/technology/` | Monitoring process, equipment compatibility and existing parts catalogue |
+| `/monitoring/`, `/technology/#parts-catalogue` | Monitoring process, equipment compatibility and guide to all published parts listings |
 | `/about/`, `/about/#service-area` | Local business and coverage |
 | `/support/`, `/support/#faqs` | Office contact, monitoring-account guidance and FAQs |
 | `/quote/` | Property, priorities, review and simulated confirmation |

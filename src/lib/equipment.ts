@@ -1,0 +1,87 @@
+export const systemChapters = [
+  {
+    id: 'detect',
+    label: 'Detection',
+    title: 'Know when something changes.',
+    text: 'A door contact can tell the alarm a door has opened. A motion sensor detects movement. Depending on the system, smoke or water detection can add another kind of warning.',
+    equipment: 'Door contacts, motion sensors, alarm panels and environmental detection.',
+    photo: 'gear-detect',
+    link: 'technology/#alarm-equipment',
+    action: 'Explore alarm equipment',
+  },
+  {
+    id: 'see',
+    label: 'Video',
+    title: 'See what happened.',
+    text: 'Cameras and video doorbells let you check an arrival or review an event. Hewberry can discuss what you need to see and who should be able to view it.',
+    equipment: 'Indoor and outdoor cameras, video doorbells and recording equipment.',
+    photo: 'gear-video',
+    link: 'technology/#video-equipment',
+    action: 'Explore video equipment',
+  },
+  {
+    id: 'access',
+    label: 'Access',
+    title: 'Decide who comes in.',
+    text: 'A card reader or keypad can manage entry for staff and visitors. That can help businesses handle access changes as people and schedules change.',
+    equipment: 'Card readers, keypads and door access controls.',
+    photo: 'gear-access',
+    link: 'commercial/',
+    action: 'Explore commercial security',
+  },
+  {
+    id: 'connect',
+    label: 'Wiring',
+    title: 'Connect the equipment.',
+    text: 'Cabling gives cameras, alarms and network equipment a way to work together. In a new build or renovation, Hewberry can coordinate the low-voltage wiring before the walls close.',
+    equipment: 'Alarm pre-wiring, network cabling and compatible connected devices.',
+    photo: 'gear-wiring',
+    link: 'construction/',
+    action: 'Explore construction and pre-wiring',
+  },
+  {
+    id: 'monitor',
+    label: 'Monitoring',
+    title: 'Put someone on the other end.',
+    text: 'With 24/7 monitoring, compatible equipment can send a signal to a station. An operator checks the event and follows the response instructions agreed for your account.',
+    equipment: 'A compatible alarm and a professional monitoring plan.',
+    photo: 'monitoring',
+    link: 'monitoring/',
+    action: 'See how monitoring works',
+  },
+] as const;
+
+export const catalogueGroups = [
+  {
+    id: 'alarm-equipment',
+    title: 'Alarm panels, power and detection',
+    items: [
+      { name: 'Alexor 2-Way Wireless Security Control Panel', path: 'alexor-2-way-wireless-security-control-panel', purpose: 'Controls a compatible wireless alarm system.' },
+      { name: 'PowerSeries Control Panel PC1616', path: 'powerseries-control-panel', purpose: 'Central controller for a compatible PowerSeries alarm system.' },
+      { name: 'PowerSeries Control Panel PC1832', path: 'powerseries-control-panel-pc1832', purpose: 'Central controller for a compatible PowerSeries alarm system.' },
+      { name: 'PowerSeries Control Panel PC1864', path: 'powerseries-control-panel-pc1864', purpose: 'Central controller for a compatible PowerSeries alarm system.' },
+      { name: 'IMPASSA SCW9057', path: 'impassa-self-contained-2-way-wireless-security-system-scw9057', purpose: 'Self-contained wireless alarm system.' },
+      { name: '12 V 7 Ah replacement alarm battery', path: '12v-7ah-alarm-home-security-system-repl-battery', purpose: 'Backup power for compatible equipment.' },
+      { name: 'Google Nest Protect, 2nd generation', path: 'google-nest-protect-smoke-and-carbon-monoxide-alarm-with-battery-2nd-generation', purpose: 'Smoke and carbon monoxide alarm. Google still supports existing devices and has stopped selling it.' },
+    ],
+  },
+  {
+    id: 'video-equipment',
+    title: 'Cameras and video doorbells',
+    items: [
+      { name: 'Google Nest Cam Indoor', path: 'google-nest-cam-indoor-security-camera', purpose: 'Video for indoor spaces.' },
+      { name: 'Google Nest Cam Outdoor', path: 'google-nest-cam-outdoor-security-camera', purpose: 'Video for outdoor areas.' },
+      { name: 'Google Nest Hello Video Doorbell', path: 'google-nest-hello-video-doorbell', purpose: 'Shows activity at the door on a compatible screen or app.' },
+    ],
+  },
+  {
+    id: 'connected-equipment',
+    title: 'Networking and connected home',
+    items: [
+      { name: 'Google Nest Wifi AC2200, two-pack', path: 'google-nest-wifi-ac2200-mesh-wifi-system-wifi-router-4400-sq-ft-coverage-2-pack', purpose: 'Mesh Wi-Fi equipment for a home network.' },
+      { name: 'Google Nest Hub with Assistant', path: 'google-nest-hub-with-assistant', purpose: 'A smart display for compatible connected devices.' },
+      { name: 'Google Nest Hub Gen 2', path: 'google-nest-hub-gen-2', purpose: 'A second-generation smart display for compatible devices.' },
+      { name: 'Google Nest Learning Thermostat, 3rd Gen', path: 'google-nest-learning-thermostat-3rd-gen', purpose: 'A connected thermostat for compatible heating and cooling equipment.' },
+    ],
+  },
+] as const;

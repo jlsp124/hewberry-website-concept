@@ -57,13 +57,13 @@ test('mobile menu and service disclosures support touch and keyboard', async ({ 
   await page.keyboard.press('Enter');
   await expect(page.locator('[data-service-photo="commercial"]')).toBeVisible();
   await expect(page.locator('[data-service-photo="residential"]')).toBeHidden();
-  await page.getByRole('link', { name: 'Explore commercial security' }).click();
+  await page.locator('#services').getByRole('link', { name: 'Explore commercial security' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Security for the way your business works.');
   await page.locator('main').getByRole('link', { name: 'Get a quote' }).first().click();
   await expect(page.getByRole('radio', { name: /My business/ })).toBeChecked();
 });
 
-test('cinematic motion follows native scrolling and reaches the monitoring sequence', async ({ page }) => {
+test('native scrolling moves the opening and advances the desktop system story', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('./');
@@ -74,9 +74,35 @@ test('cinematic motion follows native scrolling and reaches the monitoring seque
     await page.evaluate(() => window.scrollTo(0, 340));
     await expect.poll(() => picture.evaluate((element) => getComputedStyle(element).transform)).not.toBe(initial);
   }
+  const stage = page.locator('[data-stage]');
+  await expect(stage).toBeVisible();
+  for (const id of ['detect', 'see', 'access', 'connect', 'monitor']) {
+    await page.locator('#system-' + id).evaluate((chapter) => chapter.scrollIntoView({ block: 'center' }));
+    await expect(stage).toHaveAttribute('data-scene', id);
+    await expect(page.locator('[data-chapter-link="' + id + '"]')).toHaveAttribute('aria-current', 'location');
+    await expect.poll(() => stage.locator('img').evaluate((img) => (img as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  }
+  await expect(page.locator('.system-story__contact').getByRole('link', { name: /778-475-4320/ })).toHaveAttribute('href', 'tel:+17784754320');
+  await page.goto('./monitoring/');
   const sequence = page.locator('[data-signal-sequence]');
   await sequence.scrollIntoViewIfNeeded();
   await expect(sequence).toHaveClass(/signal-played/);
+});
+
+test('equipment chapters remain readable on mobile and the parts guide lists every source product', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('./');
+  await page.getByRole('link', { name: 'See how it works' }).click();
+  await expect(page).toHaveURL(/#system$/);
+  const chapters = page.locator('[data-chapter]');
+  await expect(chapters).toHaveCount(5);
+  await expect(chapters.locator('figure:visible')).toHaveCount(5);
+  await expect(page.locator('[data-stage]')).toBeHidden();
+  await chapters.first().getByRole('link', { name: 'Explore alarm equipment' }).click();
+  await expect(page).toHaveURL(/\/technology\/#alarm-equipment$/);
+  await expect(page.locator('.catalogue a[href*="/product/"]')).toHaveCount(14);
+  await expect(page.getByText(/Google still supports existing devices/)).toBeVisible();
 });
 
 test('quote validates choices, preserves answers and simulates without browser transmission', async ({ page }) => {
@@ -153,7 +179,7 @@ test('viewport sizes render loaded photography and stay within the screen', asyn
     });
     expect(broken, String(width)).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth), String(width)).toBe(width);
-    await expect(page.locator('.hero__actions .button')).toBeInViewport();
+    await expect(page.locator('.hero .hero__actions .button')).toBeInViewport();
     await page.screenshot({ path: testInfo.outputPath('home-' + width + '.png'), fullPage: true });
   }
 });

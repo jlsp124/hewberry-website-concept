@@ -36,3 +36,13 @@ The opening uses real, credited photography, responsive WebP and ordinary HTML o
 - Keep the equivalent keyboard and touch path visible. Preserve the answer when a decorative image cannot load. Keep all messaging readable at the reduced-motion setting.
 - Ask for property type and areas of interest, with a path for people who are unsure. Make the simulated submit explicit and retain choices when the visitor goes back.
 - Use a separate static page for each useful entry point and a distinctive mobile crop for first view. Document human and browser-based verification in [QA](qa.md).
+
+## Typography and composition revision
+
+The first pass shared too much visual grammar with Recplace. The revised opening uses one display line at wide widths, a compact row of service copy and actions, and architectural photography in its own wide frame. Bricolage Grotesque gives the display type a more characterful silhouette. Work Sans carries the existing brand connection into navigation and longer text.
+
+DBYDT informed the change in scale between display type and utility text. BCG informed how a single architectural subject can hold the frame, with more breathing room around the copy and controls at narrower widths. Eleos informed putting the identity in the opening composition and treating photography as a full visual beat. Recplace’s split opening and repeating two-column editorial rhythm were the contrast case. [DBYDT](https://www.dbydt.space/), [BCG Building Design](https://www.bcgbuildingdesign.com.au/), [Eleos](https://www.eleos.la/), [Recplace](https://recplace.ca/).
+
+The amber signal point first appears beside the Vernon location, then reappears in the monitoring sequence. The services section has one image and an adjacent selector. The actual Kalamalka Lake photograph gets a wider frame with its own caption. Content and actions are present on first paint. Motion remains attached to photography and the explanation of a signal.
+
+The walkthrough applies Getty’s idea of teaching through a sequence of objects, ERA Residence’s pacing between scenes, and Oryzo’s habit of describing a benefit before naming the equipment behind it. Desktop keeps one photographic frame in view while the explanation progresses. Small screens and reduced-motion readers get five ordinary, illustrated chapters. The ending offers a quote and the Vernon phone number. [Getty’s Persepolis Reimagined](https://persepolis.getty.edu/), [ERA Residence](https://www.era-residence.com/), [Oryzo](https://oryzo.ai/).

@@ -7,10 +7,14 @@ const { detail = false } = Astro.props;
 <section class="monitoring section-space" aria-labelledby="monitoring-heading">
   <div class="shell monitoring__inner">
     <div class="monitoring__intro">
-      <p class="eyebrow">24/7 professional monitoring</p>
-      <h2 id="monitoring-heading" class="display">When an alarm goes off.</h2>
-      <p>A monitoring station is there to receive the signal and follow the response plan for your account.</p>
-      {!detail && <a class="inline-link" href={route('monitoring/')}>Explore monitoring <span aria-hidden="true">↗</span></a>}
+      <div>
+        <p class="eyebrow">24/7 professional monitoring</p>
+        <h2 id="monitoring-heading" class="display">From a signal<br class="wide-break" /> to a person.</h2>
+      </div>
+      <div class="monitoring__detail">
+        <p>A monitoring station receives the signal and follows the response plan for your account.</p>
+        {!detail && <a class="inline-link" href={route('monitoring/')}>Explore monitoring <span aria-hidden="true">↗</span></a>}
+      </div>
     </div>
     <SignalSequence />
   </div>

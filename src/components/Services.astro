@@ -8,15 +8,12 @@ const first = services[0];
 const displayPhotos = ['residential', 'commercial', 'construction', 'monitoring'] satisfies (keyof typeof photos)[];
 ---
 <section class="services section-space" id="services" tabindex="-1" aria-labelledby="services-heading" data-services>
-  <div class="shell">
-    <div class="section-intro">
-      <div>
+  <div class="shell service-index">
+    <div class="service-index__content">
+      <div class="service-index__intro">
         <p class="eyebrow">Security services</p>
-        <h2 class="display" id="services-heading">Built around<br class="wide-break" /> your property.</h2>
+        <h2 class="display" id="services-heading">What are you looking to protect?</h2>
       </div>
-      <p class="section-intro__text">Start with what you need to protect. Hewberry can plan, install and service the system around it.</p>
-    </div>
-    <div class="service-index">
       <div class="service-index__list">
         {services.slice(0, 4).map(({ slug, label, summary, photo }) => (
           <details class="disclosure service-row" name="service" open={slug === first.slug} data-service={photo ?? 'monitoring'}>
@@ -31,13 +28,13 @@ const displayPhotos = ['residential', 'commercial', 'construction', 'monitoring'
           Equipment and upgrades <span aria-hidden="true">↗</span>
         </a>
       </div>
-      <div class="service-index__photos">
-        {displayPhotos.map((photo) => (
-          <div data-service-photo={photo} hidden={photo !== first.photo}>
-            <Photo image={photo} />
-          </div>
-        ))}
-      </div>
+    </div>
+    <div class="service-index__photos">
+      {displayPhotos.map((photo) => (
+        <div data-service-photo={photo} hidden={photo !== first.photo}>
+          <Photo image={photo} sizes="(min-width: 850px) 51vw, 94vw" />
+        </div>
+      ))}
     </div>
   </div>
 </section>

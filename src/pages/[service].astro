@@ -1,5 +1,6 @@
 ---
 import Site from '../layouts/Site.astro';
+import EquipmentCatalogue from '../components/EquipmentCatalogue.astro';
 import Monitoring from '../components/Monitoring.astro';
 import Photo from '../components/Photo.astro';
 import QuoteBand from '../components/QuoteBand.astro';
@@ -66,5 +67,6 @@ const monitoring = service.slug === 'monitoring';
       </div>
     </section>
   )}
+  {service.slug === 'technology' && <EquipmentCatalogue />}
   <QuoteBand href={service.quote} />
 </Site>
