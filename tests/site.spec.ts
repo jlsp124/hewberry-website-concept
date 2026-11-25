@@ -62,8 +62,10 @@ test('native scrolling and a mouse move change one property, then the sample can
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('./');
   const stage = page.locator('[data-journey-stage]');
+  const trace = stage.locator('.journey-trace');
   const picture = stage.locator('img');
   await expect(page.locator('[data-property-journey]')).toHaveAttribute('data-immersive', 'true');
+  await expect(trace).toBeHidden();
   await picture.evaluate((img) => img.decode());
   const original = await picture.evaluate((img) => img.currentSrc);
   await page.mouse.move(312, 343);
@@ -71,6 +73,7 @@ test('native scrolling and a mouse move change one property, then the sample can
   await page.locator('#system').evaluate((chapter) => chapter.scrollIntoView({ block: 'center' }));
   await expect.poll(() => stage.evaluate((element) => parseFloat(element.style.getPropertyValue('--journey-progress')))).toBeGreaterThan(.25);
   await expect(stage).toHaveAttribute('data-beat', 'door');
+  await expect(trace).toBeVisible();
   await expect(picture).toHaveJSProperty('currentSrc', original);
 
   const demo = page.locator('[data-alert-example]');
