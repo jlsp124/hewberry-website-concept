@@ -1,6 +1,6 @@
 # Verification
 
-The site is built as static Astro output and served under the GitHub Pages repository subpath. The repeatable checks live in [the Playwright suite](../tests/site.spec.ts).
+The site is built as static Astro output and served under the GitHub Pages repository subpath. Seven scenarios passed in Chromium. The repeatable checks live in [the Playwright suite](../tests/site.spec.ts).
 
 ## Visual review
 
@@ -16,3 +16,15 @@ Q-Industrial offered a useful benchmark for a single clear focal subject, while 
 - Reduced motion, blocked images and a no-JavaScript contact fallback. A separate default-motion test exercises the native scroll animation and monitoring diagram.
 - Five full-page screenshot widths, first-screen visibility of the main action and horizontal reflow.
 - Axe checks cover all primary routes, the open mobile menu, mobile quote priorities and review. Automated scans are narrower than an accessibility conformance audit. Physical devices and assistive-technology pairings need separate validation.
+
+## Lighthouse lab results
+
+Lighthouse 13.6 used a locally served production build. Timing and scores reflect the simulated lab profiles.
+
+| Page and profile | Performance | Accessibility | Best practices | LCP | CLS | TBT |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Home, mobile | 99 | 100 | 100 | 2.3 s | 0.010 | 10 ms |
+| Home, desktop | 100 | 100 | 100 | 0.6 s | 0.004 | 0 ms |
+| Quote, mobile | 100 | 100 | 100 | 0.8 s | 0.002 | 0 ms |
+
+The SEO score of 66 reflects the intentional `noindex` marker for the concept. These measurements provide lab evidence. Field Core Web Vitals require real visitor traffic.
