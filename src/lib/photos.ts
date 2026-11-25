@@ -33,8 +33,8 @@ export const photos = {
 } as const;
 
 export const openingPhoto = {
-  caption: 'Brick home at dusk · example property',
-  author: 'Littlehampton Bricks',
-  source: 'https://www.pexels.com/photo/contemporary-building-facade-with-glowing-lamps-near-walkway-at-sunset-4626277/',
+  caption: 'Front porch at dusk · example property',
+  author: 'Curtis Adams',
+  source: 'https://www.pexels.com/photo/charming-stone-facade-house-at-dusk-36777965/',
   ...pexels,
 };

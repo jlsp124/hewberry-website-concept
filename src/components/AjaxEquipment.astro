@@ -1,22 +1,18 @@
 ---
-const examples = [
-  { model: 'DoorProtect', purpose: 'Detects an opening door or window.' },
-  { model: 'MotionProtect', purpose: 'Detects movement indoors.' },
-  { model: 'IndoorCam', purpose: 'Shows live video inside a property.' },
-  { model: 'FireProtect 2', purpose: 'Detects smoke and heat. Some versions also detect carbon monoxide.' },
-  { model: 'LeaksProtect', purpose: 'Alerts you to water where it shouldn’t be.' },
-];
+import { ajaxDevices } from '../lib/ajax-devices';
+import { route } from '../lib/site';
 ---
 <section id="ajax-equipment" class="detail-list section-space" aria-labelledby="ajax-title">
   <div class="shell detail-layout">
     <div>
       <p class="eyebrow">Ajax Systems</p>
       <h2 class="display" id="ajax-title">Equipment to ask about.</h2>
-      <p>These examples show what Ajax makes. Hewberry can confirm which models are available and suitable for your property.</p>
+      <p>Hewberry can help choose the right combination of detection, cameras and controls for your property.</p>
+      <a class="inline-link" href={route('#services')}>See the equipment guide <span aria-hidden="true">↗</span></a>
     </div>
     <dl class="equipment-table">
-      {examples.map(({ model, purpose }) => (
-        <div><dt>{model}</dt><dd>{purpose}</dd></div>
+      {ajaxDevices.map(({ name, purpose }) => (
+        <div><dt>{name}</dt><dd>{purpose}</dd></div>
       ))}
     </dl>
   </div>

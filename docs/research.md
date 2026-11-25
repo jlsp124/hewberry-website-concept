@@ -57,6 +57,12 @@ Statistics Canada reported 109,753 police-reported incidents of breaking and ent
 
 ## Design research
 
+### Ajax product-story scope
+
+The demo is designed around representative Ajax hardware at the requester’s direction. The equipment guide covers door and glass detection, motion, sirens, system control, video and environmental detection. Product functions and names were checked against [Ajax Systems](https://ajax.systems/products/) and examples in the [ADI Canada Ajax catalogue](https://www.en.adiglobaldistribution.ca/catalog/shop-brands/ajax/). Hewberry’s current model list and individual monitoring agreements still need company confirmation.
+
+The company’s publicly stated years of experience, contact details and published homeowner quote are the proof points. The [Greater Vernon Chamber listing](https://business.vernonchamber.ca/list/member/hewberry-alarms-ltd-prestige-monitoring-station-inc-1700) confirms the service categories and experience statement. The photo references in [assets.md](assets.md) are illustrative.
+
 This is a qualitative design review. Live HTML, case-study material and viewport snapshots support specific observations. An award listing or a screenshot cannot establish accessibility or field performance.
 
 | Reference | Technique observed and decision |

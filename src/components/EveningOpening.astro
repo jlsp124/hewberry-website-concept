@@ -1,0 +1,24 @@
+---
+import { route } from '../lib/site';
+---
+
+<section class="evening" aria-labelledby="evening-title">
+  <picture class="evening__photo">
+    <source media="(max-width: 680px)" type="image/avif" srcset={`${route('images/story/porch-640.avif')} 640w, ${route('images/story/porch-960-mobile.avif')} 960w`} sizes="100vw" />
+    <source media="(max-width: 680px)" srcset={`${route('images/story/porch-640.webp')} 640w, ${route('images/story/porch-960-mobile.webp')} 960w`} sizes="100vw" />
+    <img src={route('images/story/porch-1600.webp')}
+      srcset={`${route('images/story/porch-1000.webp')} 1000w, ${route('images/story/porch-1600.webp')} 1600w, ${route('images/story/porch-2200.webp')} 2200w`}
+      sizes="(min-width: 1450px) 79vw, 100vw" width="2200" height="1467" fetchpriority="high"
+      alt="The warm light of a front porch at dusk" />
+  </picture>
+  <div class="evening__shade" aria-hidden="true"></div>
+  <div class="shell evening__inner">
+    <div class="evening__copy">
+      <h1 id="evening-title">Over 25 years <em>on the job.</em></h1>
+      <p>We install alarms and cameras for Okanagan homes and businesses and provide 24/7 monitoring.</p>
+    </div>
+    <div class="evening__bottom">
+      <span class="scroll-note" aria-hidden="true"><span>↓</span> Scroll to follow an alarm</span>
+    </div>
+  </div>
+</section>

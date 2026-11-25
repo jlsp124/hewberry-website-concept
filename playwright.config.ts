@@ -11,6 +11,7 @@ export default defineConfig({
     baseURL,
     browserName: 'chromium',
     channel: process.env.HEWBERRY_BROWSER,
+    launchOptions: { args: ['--enable-unsafe-swiftshader'] },
     trace: 'retain-on-failure',
   },
   webServer: live ? undefined : {

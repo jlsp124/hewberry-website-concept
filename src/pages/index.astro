@@ -1,8 +1,9 @@
 ---
 import Site from '../layouts/Site.astro';
-import PropertyStory from '../components/PropertyStory.astro';
-import HomeSystems from '../components/HomeSystems.astro';
-import ContactPanel from '../components/ContactPanel.astro';
+import EveningOpening from '../components/EveningOpening.astro';
+import SignalStory from '../components/SignalStory.astro';
+import SystemIndex from '../components/SystemIndex.astro';
+import EveningContact from '../components/EveningContact.astro';
 import '../styles/home.css';
 ---
 <Site
@@ -10,16 +11,16 @@ import '../styles/home.css';
   title="Hewberry Alarms | Security installation and monitoring in Vernon, BC"
   description="Hewberry Alarms installs security systems, cameras and door access and provides 24/7 alarm monitoring for homes and businesses in Vernon and the Okanagan."
 >
-  <PropertyStory />
-  <HomeSystems />
+  <EveningOpening />
+  <SignalStory />
+  <SystemIndex />
   <section class="home-testimonial" aria-label="Customer testimonial">
     <div class="shell home-testimonial__inner">
-      <span class="home-testimonial__mark" aria-hidden="true">“</span>
       <figure>
-        <blockquote>Hewberry Alarms provided excellent and timely service, advising us on the best options for our new home…</blockquote>
-        <figcaption><strong>Jack Ledbetter</strong><span>Homeowner</span></figcaption>
+        <blockquote>“Hewberry Alarms provided excellent and timely service, advising us on the best options for our new home…”</blockquote>
+        <figcaption><span aria-hidden="true"></span><strong>Jack Ledbetter</strong> <span>Homeowner</span></figcaption>
       </figure>
     </div>
   </section>
-  <ContactPanel />
+  <EveningContact />
 </Site>

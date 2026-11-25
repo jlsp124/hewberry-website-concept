@@ -52,3 +52,19 @@ The walkthrough applies Getty’s idea of teaching through a sequence of objects
 The photographed equipment sequence made visitors infer how unrelated objects fit together. The new opening keeps one real property in view. Its lighting changes as the reader moves from an ordinary evening to a door opening and an operator receiving an alert. The house and a single amber signal connect those moments. Pointer depth and a playable, clearly labelled signal example give the visitor an immediate response alongside the written explanation.
 
 Hewberry’s own claim of more than 25 years of industry experience leads the page. Two header links take visitors to the installation table or contact. The customer quote comes from Hewberry’s published testimonial. The close offers the Vernon office phone number and the simulated quote. The visual reference is Oryzo’s habit of returning to one recognizable subject and showing its use before listing specs. [Hewberry Alarms](https://www.hewberryalarms.ca/), [Lusion’s Oryzo case study](https://lusion.co/projects/oryzo_ai/).
+
+## Product story revision
+
+| Direction | What it shows | Tradeoff |
+| --- | --- | --- |
+| Doorway at dusk | A photographed entrance leads into a close-up of the door opening, an Ajax hub receiving the signal and a monitoring operator receiving the alert. Technical details follow in a visual product index. | Puts the installation and its purpose in one story. The opening photo and demonstration need distinct, credible compositions at every width. |
+| Product studio | A bright tabletop presents a row of Ajax equipment. The viewer examines each item and compares it in a catalogue. | Strong for hardware recognition. The story could feel like a manufacturer catalogue and give too little space to Hewberry's service. |
+| Property cutaway | An architectural model reveals several protection layers around the building. | Shows broad scope quickly. A whole building divides attention and requires more visual production to feel believable. |
+
+The doorway at dusk is the chosen direction. A real entrance, painted timber, pearl-white hardware and a copper signal give the page a common visual vocabulary. Inter Tight provides clear utility and confident display scale. Instrument Serif adds a warmer note to the opening and customer testimony. Hewberry's published shield, years of experience, and customer quote carry the identity.
+
+The opening introduces the company in one sentence. The walkthrough shows a door moving, the system sending an alert, and a person receiving it. Each action gets its own composition and caption. The equipment index and installation services make the next decision easy, followed by the Vernon office and simulated quote.
+
+Oryzo informed the photographed setting, dedicated close-ups and continuity between shots. HALO/02 and VYRA show ways to make the featured object visibly change with scroll. The labelling and 3D geometry here are original to this concept. The models are Ajax examples for the demo. Hewberry can specify its current equipment when it reviews the site. [Lusion on Oryzo's 3D design](https://blog.lusion.co/oryzo-bts-part-2-7-3d-design-and-motion-graphics) · [HALO/02](https://github.com/NachoTorresRD/interactive-product-showcase) · [VYRA](https://github.com/arslanagayev/vyra-energy)
+
+The 3D scene uses native scroll. The camera angle and door opening follow it continuously. Pointer input adjusts the view and lighting slightly so the object remains the focus. Touch gets its own closer framing. The complete captions and illustrated states remain available with reduced motion, script failures and unsupported graphics.

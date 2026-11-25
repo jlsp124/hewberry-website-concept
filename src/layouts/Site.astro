@@ -1,5 +1,6 @@
 ---
-import '@fontsource-variable/work-sans/wght.css';
+import '@fontsource-variable/inter-tight/wght.css';
+import '@fontsource/instrument-serif/latin-400-italic.css';
 import '../styles/site.css';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
@@ -14,7 +15,7 @@ interface Props {
 const { title, description, home = false } = Astro.props;
 const pageTitle = home ? title : title + ' | Hewberry Alarms';
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const previewImage = new URL(route('images/night-home-1600.webp'), Astro.site);
+const previewImage = new URL(route('images/story/porch-1000.webp'), Astro.site);
 ---
 <!doctype html>
 <html lang="en-CA">
@@ -23,7 +24,7 @@ const previewImage = new URL(route('images/night-home-1600.webp'), Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="robots" content="noindex, follow" />
-    <meta name="theme-color" content="#171b20" />
+    <meta name="theme-color" content="#202422" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/png" href={route('images/favicon.png')} />
     <meta property="og:type" content="website" />
@@ -36,7 +37,7 @@ const previewImage = new URL(route('images/night-home-1600.webp'), Astro.site);
     <meta name="twitter:card" content="summary_large_image" />
     <title>{pageTitle}</title>
   </head>
-  <body>
+  <body class:list={[home && 'story-home']}>
     <a class="skip-link" href="#main">Skip to content</a>
     <Header home={home} />
     <main id="main" tabindex="-1">

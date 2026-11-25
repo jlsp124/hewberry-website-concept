@@ -1,28 +1,21 @@
-@font-face {
-  font-family: 'Bricolage Grotesque';
-  src: url('../assets/bricolage-grotesque-latin.woff2') format('woff2');
-  font-weight: 200 800;
-  font-display: swap;
-}
-
 :root {
   color-scheme: light;
   --ink: #202526;
   --muted: #505650;
-  --paper: #f1eee6;
+  --paper: #efede4;
   --warm-white: #fbf8f0;
   --amber: #ffc471;
   --amber-hover: #ffda9e;
-  --night: #171b20;
-  --night-deep: #111417;
+  --night: #232a26;
+  --night-deep: #171d1c;
   --night-soft: #c5c8c2;
   --rule: #d2cdc1;
   --night-rule: #515451;
   --focus: #845110;
   --gutter: clamp(1.375rem, 5.15vw, 6.5rem);
   --section-space: clamp(4rem, 8vw, 8.5rem);
-  --font: 'Work Sans Variable', 'Segoe UI', system-ui, sans-serif;
-  --display-font: 'Bricolage Grotesque', var(--font);
+  --font: 'Inter Tight Variable', 'Segoe UI', system-ui, sans-serif;
+  --display-font: var(--font);
   --ease: cubic-bezier(.2,.65,.25,1);
   font-family: var(--font);
   color: var(--ink);

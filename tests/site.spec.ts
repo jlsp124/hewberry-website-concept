@@ -51,57 +51,75 @@ test('compact mobile navigation leads to systems, contact and a prefilled quote'
   await menu.getByRole('link', { name: 'Systems', exact: true }).click();
   await expect(page).toHaveURL(/#services$/);
   await expect(page.getByRole('heading', { name: 'What we install.' })).toBeInViewport();
-  await page.locator('#services').getByRole('link', { name: 'Cameras' }).click();
+  await page.locator('#services').getByRole('link', { name: 'Businesses' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Security for the way your business works.');
   await page.locator('main').getByRole('link', { name: 'Get a quote' }).first().click();
   await expect(page.getByRole('radio', { name: /My business/ })).toBeChecked();
 });
 
-test('native scrolling and a mouse move change one property, then the sample can be replayed', async ({ page }) => {
+test('the 3D door can open and close and the scroll story reverses cleanly', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
+  const modelRequests: string[] = [];
+  page.on('request', (request) => {
+    if (request.url().includes('/signal-models.')) modelRequests.push(request.url());
+  });
   await page.goto('./');
-  const stage = page.locator('[data-journey-stage]');
-  const trace = stage.locator('.journey-trace');
-  const picture = stage.locator('img');
-  await expect(page.locator('[data-property-journey]')).toHaveAttribute('data-immersive', 'true');
-  await expect(trace).toBeHidden();
-  await picture.evaluate((img) => img.decode());
-  const original = await picture.evaluate((img) => img.currentSrc);
-  await page.mouse.move(312, 343);
-  await expect.poll(() => stage.evaluate((element) => parseFloat(element.style.getPropertyValue('--journey-pan-x')))).toBeGreaterThan(2);
-  await page.locator('#system').evaluate((chapter) => chapter.scrollIntoView({ block: 'center' }));
-  await expect.poll(() => stage.evaluate((element) => parseFloat(element.style.getPropertyValue('--journey-progress')))).toBeGreaterThan(.25);
+  const story = page.locator('[data-signal-story]');
+  const stage = story.locator('[data-signal-stage]');
+  const first = page.locator('#signal-door');
+  await page.locator('.evening__photo img').evaluate((image) => (image as HTMLImageElement).decode());
+  expect(modelRequests).toHaveLength(0);
+  await first.evaluate((step) => step.scrollIntoView({ block: 'start', behavior: 'instant' }));
+  await expect(story).toHaveAttribute('data-webgl', 'true');
+  expect(modelRequests).toHaveLength(1);
   await expect(stage).toHaveAttribute('data-beat', 'door');
-  await expect(trace).toBeVisible();
-  await expect(picture).toHaveJSProperty('currentSrc', original);
-
-  const demo = page.locator('[data-alert-example]');
-  const button = demo.getByRole('button', { name: 'Play example' });
+  const canvas = stage.locator('canvas');
+  await expect.poll(() => canvas.evaluate((node) => (node as HTMLCanvasElement).width)).toBeGreaterThan(320);
+  const button = first.getByRole('button', { name: 'Open the door' });
   await button.focus();
-  await expect(stage).toHaveAttribute('data-beat', 'response');
   await page.keyboard.press('Enter');
-  await expect(demo).toHaveAttribute('data-alert-state', 'playing');
-  await expect(demo.getByRole('status')).toHaveText(/operator received the alert/);
-  await demo.getByRole('button', { name: 'Replay example' }).click();
-  await expect(demo).toHaveAttribute('data-alert-state', 'playing');
-  await expect(demo).toHaveAttribute('data-alert-state', 'complete');
+  await expect(stage).toHaveAttribute('data-door-open', 'true');
+  await expect(first.getByRole('status')).toHaveText(/sensor sends a signal/);
+  await first.getByRole('button', { name: 'Close the door' }).click();
+  await expect(stage).toHaveAttribute('data-door-open', 'false');
+
+  await page.locator('#signal-hub').evaluate((step) => step.scrollIntoView({ block: 'start', behavior: 'instant' }));
+  await expect(stage).toHaveAttribute('data-beat', 'hub');
+  await page.locator('#signal-response').evaluate((step) => step.scrollIntoView({ block: 'start', behavior: 'instant' }));
+  await expect(stage).toHaveAttribute('data-beat', 'response');
+  await first.evaluate((step) => step.scrollIntoView({ block: 'start', behavior: 'instant' }));
+  await expect(stage).toHaveAttribute('data-beat', 'door');
+  await expect(first.getByRole('button', { name: 'Open the door' })).toBeInViewport();
+
+  await page.locator('#services').evaluate((step) => step.scrollIntoView({ block: 'start', behavior: 'instant' }));
+  const stageBottom = await stage.evaluate((element) => element.getBoundingClientRect().bottom);
+  const guideTop = await page.locator('#services').evaluate((element) => element.getBoundingClientRect().top);
+  expect(stageBottom).toBeLessThanOrEqual(guideTop + 1);
+
   await page.goto('./monitoring/');
   const sequence = page.locator('[data-signal-sequence]');
   await sequence.scrollIntoViewIfNeeded();
   await expect(sequence).toHaveClass(/signal-played/);
 });
 
-test('the installation table and Ajax examples remain readable on mobile', async ({ page }) => {
+test('the equipment guide exposes images and switchable Ajax categories on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./');
-  const table = page.getByRole('table', { name: 'Security installation and monitoring services' });
-  await expect(table.getByRole('rowheader')).toHaveCount(6);
-  await page.getByRole('link', { name: 'See equipment examples and what they do' }).click();
-  await expect(page).toHaveURL(/\/technology\/#ajax-equipment$/);
-  await expect(page.getByText('DoorProtect')).toBeInViewport();
-  await expect(page.getByText(/Hewberry can confirm which models/)).toBeVisible();
+  const table = page.getByRole('table', { name: 'Ajax equipment examples and their uses' });
+  await expect(table.getByRole('rowheader')).toHaveText(['DoorProtect', 'MotionProtect', 'MotionCam', 'GlassProtect', 'HomeSiren']);
+  const filter = page.getByRole('group', { name: 'Equipment category' });
+  await filter.getByRole('button', { name: 'Video' }).click();
+  await expect(table.getByRole('rowheader')).toHaveText(['DoorBell', 'TurretCam', 'NVR']);
+  await expect(filter.getByRole('button', { name: 'Video' })).toHaveAttribute('aria-pressed', 'true');
+  await filter.getByRole('button', { name: 'Fire & water' }).focus();
+  await page.keyboard.press('Space');
+  await expect(table.getByRole('rowheader')).toHaveText(['FireProtect 2', 'LeaksProtect', 'WaterStop']);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+
+  await page.goto('./technology/#ajax-equipment');
+  await expect(page.getByText('DoorProtect')).toBeVisible();
   await page.locator('.catalogue summary').click();
   await expect(page.locator('.catalogue a[href*="/product/"]')).toHaveCount(14);
   await expect(page.getByText(/Google still supports existing devices/)).toBeVisible();
@@ -149,14 +167,12 @@ test('quote validates choices, preserves answers and simulates without browser t
 
 test('reduced motion, blocked imagery and script-free contact fallback', async ({ browser, page, baseURL }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.route('**/*.webp', (request) => request.abort());
+  await page.route(/\.(?:avif|webp)(?:[?#]|$)/, (request) => request.abort());
   await page.goto('./');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  await expect(page.locator('[data-property-journey]')).not.toHaveAttribute('data-immersive');
-  const example = page.locator('[data-alert-example]');
-  await example.getByRole('button', { name: 'Play example' }).click();
-  await expect(example).toHaveAttribute('data-alert-state', 'complete');
-  await expect(page.locator('#contact').getByRole('link', { name: 'Try the quote form' })).toBeVisible();
+  await expect(page.locator('[data-signal-story]')).not.toHaveAttribute('data-webgl');
+  await expect(page.getByRole('heading', { name: 'A person answers.' })).toBeVisible();
+  await expect(page.locator('#contact').getByRole('link', { name: 'Get a quote' })).toBeVisible();
   await page.goto('./support/');
   await expect(page.locator('main a[href="tel:+17784754320"]')).toHaveCount(1);
   await page.locator('summary').filter({ hasText: /existing alarm/ }).click();
@@ -165,8 +181,9 @@ test('reduced motion, blocked imagery and script-free contact fallback', async (
   const withoutScripts = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const fallback = await withoutScripts.newPage();
   await fallback.goto('./');
-  await expect(fallback.getByRole('heading', { name: 'Someone gets the alert.' })).toBeVisible();
-  await expect(fallback.getByRole('button', { name: 'Play example' })).toBeHidden();
+  await expect(fallback.getByRole('heading', { name: 'A person answers.' })).toBeVisible();
+  await expect(fallback.getByRole('button', { name: 'Open the door' })).toBeHidden();
+  await expect(fallback.getByRole('table', { name: 'Ajax equipment examples and their uses' }).getByRole('rowheader')).toHaveCount(13);
   await expect(fallback.locator('#contact a[href="tel:+17784754320"]')).toBeVisible();
   await fallback.goto('./quote/');
   await expect(fallback.getByRole('link', { name: 'Hewberry’s contact page' })).toBeVisible();
