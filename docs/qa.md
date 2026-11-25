@@ -10,6 +10,8 @@ With reduced motion or unavailable WebGL, the walkthrough uses the manufacturerâ
 
 Lighthouse 13.6 measured the local production build at 95 for mobile performance, with a 2.94 s LCP, 0.001 CLS and 0 ms TBT. The run selected the 960 px portrait AVIF and made no requests for the 3D bundle. These are simulated lab measurements.
 
+A clean Linux checkout passed `npm ci`, `npm run check`, and `npm run build` with Node 24.22.3 and npm 11.19.1, matching the Pages runner.
+
 ## Earlier dusk-to-night edition
 
 The dusk-to-night edition passed all eight Chromium scenarios on the deployed site. The suite checks the two-link navigation, no links in photo figures, one continuous property, pointer response, the replayable sample alert, equipment and quote routes, blocked images, reduced motion, and script-free access to contact information. [Playwright suite](../tests/site.spec.ts), [Pages deployment](https://github.com/jlsp124/hewberry-website-concept/actions/runs/45541424685).
