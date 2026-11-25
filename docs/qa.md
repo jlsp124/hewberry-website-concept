@@ -1,6 +1,6 @@
 # Verification
 
-The site is built as static Astro output and served under the GitHub Pages repository subpath. The redesigned edition passed eight Chromium scenarios against a local production build. The repeatable checks live in [the Playwright suite](../tests/site.spec.ts).
+The site is built as static Astro output and served under the GitHub Pages repository subpath. The redesigned edition passed eight Chromium scenarios against both a local production build and the deployed site. [Playwright suite](../tests/site.spec.ts) and [successful Pages build and deployment](https://github.com/jlsp124/hewberry-website-concept/actions/runs/45535823739).
 
 ## Visual review
 
@@ -8,7 +8,7 @@ The initial responsive review examined the 390, 768, 1024, 1440 and 1920 px home
 
 Q-Industrial offered a useful benchmark for a single clear focal subject, while Enpal and Custom Alarm informed how soon a visitor can choose an action on mobile. Hewberry’s strongest visual moment is the high-contrast dusk composition. Below it, the service index and monitoring diagram do most of the explanatory work. ERA and Igloo show how much more production depth is possible with bespoke 3D art. Here, a dedicated architectural shoot would create more distinctive, brand-specific proof than increasing the complexity of the opening animation. See [design research](research.md#design-research).
 
-The redesign prompted by DBYDT, BCG and Eleos was re-captured at all five widths. A cap on the headline scale keeps the wide composition on one line at 1920 px. At 390 px the large type, two actions and main photograph fit in the first screen. The sticky desktop chapters were inspected individually in their scrolling state. The mobile and reduced-motion views retain every illustrated chapter as ordinary page content. See [the revised creative direction](creative-direction.md#typography-and-composition-revision).
+The redesign prompted by DBYDT, BCG and Eleos was re-captured at all five widths. A cap on the headline scale keeps the wide composition on one line at 1920 px. At 390 px the large type, two actions and main photograph fit in the first screen. The 1140 px desktop opening was inspected as an additional windowed layout. The sticky desktop chapters were inspected individually on the deployed site. The mobile and reduced-motion views retain every illustrated chapter as ordinary page content. The home, equipment guide, quote and support routes also reflowed at 320 px. [Revised creative direction](creative-direction.md#typography-and-composition-revision).
 
 ## Functionality and accessibility
 
@@ -22,12 +22,12 @@ The redesign prompted by DBYDT, BCG and Eleos was re-captured at all five widths
 
 ## Lighthouse lab results
 
-Lighthouse 13.6 initially measured the first locally served production build. Timing and scores reflect the simulated lab profiles.
+Lighthouse 13.6 measured the revised, locally served production build. Timing and scores reflect the simulated lab profiles.
 
 | Page and profile | Performance | Accessibility | Best practices | LCP | CLS | TBT |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Home, mobile | 99 | 100 | 100 | 2.3 s | 0.010 | 10 ms |
-| Home, desktop | 100 | 100 | 100 | 0.6 s | 0.004 | 0 ms |
+| Home, mobile | 97 | 100 | 100 | 2.4 s | 0.006 | 80 ms |
+| Home, desktop | 100 | 100 | 100 | 0.6 s | 0.019 | 0 ms |
 | Quote, mobile | 100 | 100 | 100 | 0.8 s | 0.002 | 0 ms |
 
 The SEO score of 66 reflects the intentional `noindex` marker for the concept. These measurements provide lab evidence. Field Core Web Vitals require real visitor traffic.
