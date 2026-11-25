@@ -29,7 +29,7 @@ Research snapshot for November 24, 2026. Company pages, public records, listings
 
 The apex and HTTP variants redirected to `https://www.hewberryalarms.ca/`. The homepage, logo, styles, contact and article HTML were reachable with the CLI even when the search reader returned an access error. The site runs WordPress with Avada and WooCommerce. Capture and inspection used a 1440 px desktop and a 390 px mobile browser. Home starts with office, account and cart chrome, then a Work Sans headline on a dark stock photograph. The published shield combines blue with red signal arcs, and the current interface uses amber action accents.
 
-The CLI inventory followed the site's public sitemap families, reviewing their public headings and template content without submitting contact, login or cart data.
+The CLI inventory followed all 83 distinct URLs across the site's 13 public sitemap families, reviewing public headings and template content. Access used read-only requests.
 
 | Route family | Observation and implication |
 | --- | --- |

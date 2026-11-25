@@ -229,6 +229,7 @@ p { line-height: 1.55; }
     .hero__picture {
       animation: drift auto linear both;
     }
+    /* Keep this rule separate so minification preserves the timeline. */
     .hero__scene > .hero__picture {
       animation-timeline: --hero-view;
       animation-range: exit 0% exit 100%;
