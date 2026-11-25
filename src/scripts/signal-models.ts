@@ -1,7 +1,7 @@
 import {
   ACESFilmicToneMapping, AmbientLight, CanvasTexture, Color, DirectionalLight, Group,
   HemisphereLight, LatheGeometry, Mesh, MeshBasicMaterial, MeshStandardMaterial, PCFShadowMap,
-  PerspectiveCamera, PlaneGeometry, PMREMGenerator, RingGeometry, Scene, SpotLight, SRGBColorSpace,
+  PerspectiveCamera, PlaneGeometry, PMREMGenerator, Scene, SpotLight, SRGBColorSpace,
   TextureLoader, Vector2, WebGLRenderer,
 } from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -33,25 +33,12 @@ function sensor(radius: number, length: number, material: MeshStandardMaterial) 
   return device;
 }
 
-function pulseRings() {
-  const pulse = new Group();
-  const rings = Array.from({ length: 3 }, (_, index) => {
-    const material = new MeshBasicMaterial({ color: '#ffa78d', transparent: true, opacity: 0, depthWrite: false });
-    const radius = .36 + index * .21;
-    const ring = new Mesh(new RingGeometry(radius - .006, radius, 72), material);
-    ring.renderOrder = 3;
-    pulse.add(ring);
-    return ring;
-  });
-  return { pulse, rings };
-}
-
 function makeDoor(onTextureReady: () => void) {
   const root = new Group();
   const enamel = new MeshStandardMaterial({ color: '#e6e4d9', roughness: .27, metalness: .04 });
-  const edge = new MeshStandardMaterial({ color: '#b3b7aa', roughness: .38 });
-  const rail = new MeshStandardMaterial({ color: '#232926', roughness: .53 });
-  const wall = new MeshStandardMaterial({ color: '#353832', roughness: .8 });
+  const edge = new MeshStandardMaterial({ color: '#b7aca0', roughness: .38 });
+  const rail = new MeshStandardMaterial({ color: '#292320', roughness: .53 });
+  const wall = new MeshStandardMaterial({ color: '#3f332e', roughness: .8 });
   const bronze = new MeshStandardMaterial({ color: '#b69a76', roughness: .31, metalness: .68 });
   const paintedOak = new MeshStandardMaterial({ color: '#726158', roughness: .67 });
   new TextureLoader().load(route('images/story/oak.webp'), (texture) => {
@@ -109,10 +96,7 @@ function makeDoor(onTextureReady: () => void) {
   indicator.position.set(-.543, .915, .33);
   root.add(indicator);
 
-  const signal = pulseRings();
-  signal.pulse.position.set(-.541, .68, .345);
-  root.add(signal.pulse);
-  return { root, hinge, led, signal };
+  return { root, hinge, led };
 }
 
 function hubMark() {
@@ -166,8 +150,8 @@ function makeHub() {
   const station = new Group();
   const product = new Group();
   const shell = new MeshStandardMaterial({ color: '#e4e1d6', roughness: .32, metalness: .06 });
-  const outer = new MeshStandardMaterial({ color: '#bfc2b6', roughness: .45 });
-  const seam = new MeshStandardMaterial({ color: '#313b35', roughness: .64 });
+  const outer = new MeshStandardMaterial({ color: '#c4b9ad', roughness: .45 });
+  const seam = new MeshStandardMaterial({ color: '#38312e', roughness: .64 });
   const back = rounded(1.94, 1.94, .205, .125, outer);
   const joint = rounded(1.98, 1.98, .104, .084, seam);
   const face = rounded(2.02, 2.02, .202, .099, shell);
@@ -183,11 +167,10 @@ function makeHub() {
   product.add(mark);
   station.add(product);
 
-  const signal = pulseRings();
-  signal.pulse.position.z = -.40;
-  signal.pulse.scale.setScalar(4.05);
-  station.add(signal.pulse);
-  return { station, product, signal };
+  const plinth = rounded(6.8, .10, 4.7, .022, new MeshStandardMaterial({ color: '#2d2019', roughness: .68 }));
+  plinth.position.set(0, -1.12, .1);
+  station.add(plinth);
+  return { station, product };
 }
 
 export function createSignalModels(canvas: HTMLCanvasElement, onTextureReady: () => void) {
@@ -212,10 +195,10 @@ export function createSignalModels(canvas: HTMLCanvasElement, onTextureReady: ()
   radiance.dispose();
 
   const camera = new PerspectiveCamera(33, 1, .1, 26);
-  scene.add(new AmbientLight('#e8ecdd', .35));
-  scene.add(new HemisphereLight('#e3e9df', '#45372f', 1.65));
+  scene.add(new AmbientLight('#eee3d7', .35));
+  scene.add(new HemisphereLight('#efe4d6', '#45342e', 1.65));
   const amberKey = new Color('#ffddbb');
-  const whiteKey = new Color('#e9f0d5');
+  const whiteKey = new Color('#f3e7da');
   const key = new DirectionalLight(amberKey, 2.44);
   key.position.set(-3.2, 3.4, 4.9);
   key.castShadow = true;
@@ -227,7 +210,7 @@ export function createSignalModels(canvas: HTMLCanvasElement, onTextureReady: ()
   key.shadow.normalBias = .018;
   key.shadow.bias = -.00035;
   scene.add(key);
-  const edge = new DirectionalLight('#9db8ac', 1.52);
+  const edge = new DirectionalLight('#c4af9c', 1.52);
   edge.position.set(3.3, 1.7, .5);
   scene.add(edge);
   const porchLight = windowLight();
@@ -236,7 +219,7 @@ export function createSignalModels(canvas: HTMLCanvasElement, onTextureReady: ()
   const door = makeDoor(onTextureReady);
   const hub = makeHub();
   scene.add(door.root, hub.station);
-  let framingDistance = 5.03;
+  let framingDistance = 5.64;
   let sized = false;
 
   function size(width: number, height: number) {
@@ -246,7 +229,7 @@ export function createSignalModels(canvas: HTMLCanvasElement, onTextureReady: ()
     camera.fov = narrow ? 40 : 33;
     const horizontalSpan = 2 * Math.tan(camera.fov * Math.PI / 360) * camera.aspect;
     // Keep the complete hardware in view even on a tall, narrow stage.
-    framingDistance = Math.max(narrow ? 5.19 : 5.03, 3.25 / horizontalSpan);
+    framingDistance = Math.max(narrow ? 5.4 : 5.64, 3.28 / horizontalSpan);
     camera.updateProjectionMatrix();
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, narrow ? 1.35 : 1.55));
     renderer.setSize(width, height, false);
@@ -255,42 +238,28 @@ export function createSignalModels(canvas: HTMLCanvasElement, onTextureReady: ()
 
   function render(progress: number, opening: number, pointerX: number, pointerY: number) {
     if (!sized) return;
-    const doorExit = smoothRange(.85, 1.16, progress);
-    const hubEnter = smoothRange(.86, 1.17, progress);
-    const hubTravel = smoothRange(1.14, 1.91, progress);
-    const hubExit = smoothRange(1.75, 2.03, progress);
-    porchLight.visible = doorExit < .99;
-    porchLight.intensity = 38 * (1 - doorExit);
-    porchLight.position.x = -2.3 + pointerX * .46;
-    door.root.visible = progress < 1.16;
-    hub.station.visible = progress > .86 && progress < 2.1;
-    door.root.position.set(-doorExit * 4.1, 0, -doorExit * 1.25);
+    const doorShot = progress < 1;
+    const doorMove = smoothRange(.12, .68, progress);
+    const hubTravel = smoothRange(1.19, 1.74, progress);
+    porchLight.visible = doorShot;
+    porchLight.position.x = -2.3 + pointerX * .82;
+    porchLight.position.y = 2.2 + pointerY * .42;
+    door.root.visible = doorShot;
+    hub.station.visible = !doorShot;
     door.hinge.rotation.y = opening * .64;
-    door.led.emissiveIntensity = .12 + opening * 1.18;
+    door.led.emissiveIntensity = .12 + opening * 1.7;
 
-    door.signal.rings.forEach((ring, index) => {
-      const range = smoothRange(.19 + index * .13, .68 + index * .09, opening);
-      ring.scale.setScalar(.67 + range * .66);
-      ring.material.opacity = (1 - doorExit) * range * (.51 - index * .101);
-    });
+    hub.station.position.set(0, .12, -.12);
+    hub.product.rotation.set(-.15 + hubTravel * .21 - pointerY * .15,
+      -.59 + hubTravel * .91 + pointerX * .24, .08 - hubTravel * .15);
 
-    hub.station.position.set(3.4 * (1 - hubEnter) - .60 * hubExit, .28, -1.1 + hubEnter * .95 - hubExit * .87);
-    hub.product.rotation.set(-.24 + hubTravel * .43 - pointerY * .13, -.74 + hubTravel * 1.29 + pointerX * .28, .15 - hubTravel * .31);
-    hub.product.scale.setScalar(.76 + hubEnter * .31 + hubTravel * .11);
-    hub.signal.rings.forEach((ring, index) => {
-      const range = smoothRange(1.27 + index * .12, 1.76, progress);
-      ring.scale.setScalar(.89 + range * .25);
-      ring.material.opacity = range * (.33 - index * .058) * (1 - hubExit * .58);
-    });
-
-    const look = (-.45 + .19 * opening) * (1 - hubEnter);
-    const doorMove = smoothRange(.07, .81, progress);
-    camera.position.set(look + .32 - .64 * doorMove + .34 * hubEnter + pointerX * .23,
-      .79 - .37 * hubEnter + pointerY * .14, framingDistance - .30 * doorMove + .36 * hubEnter);
-    camera.lookAt(look, .50 - .22 * hubEnter, .02);
+    const look = doorShot ? -.38 + .18 * opening : 0;
+    camera.position.set(look + (doorShot ? .31 - .51 * doorMove : .34) + pointerX * .37,
+      (doorShot ? .72 : .82) + pointerY * .24, framingDistance - (doorShot ? .25 * doorMove : .09 * hubTravel));
+    camera.lookAt(look, doorShot ? .45 : .12, .02);
     key.position.x = -3.2 + pointerX * 2.8 + hubTravel * .58;
     key.position.y = 3.4 - pointerY * 1.28;
-    key.color.copy(amberKey).lerp(whiteKey, hubEnter * .49);
+    key.color.copy(doorShot ? amberKey : whiteKey);
     renderer.render(scene, camera);
   }
 

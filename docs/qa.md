@@ -1,5 +1,13 @@
 # Verification
 
+## Editorial refinement
+
+All eight browser scenarios passed. The suite verifies the sourced figure, the equipment page, the installation preview on hover, the quote simulation, and canvas alignment after resizing an already open window. Reduced motion and script-free reading remain covered.
+
+The updated layouts were visually checked at phone, tablet, short landscape, desktop and a 2,530 CSS pixel viewport rendered at 75% scale. The door and hub drawing rectangles matched their photo frames in all five cases. WebKit at 390 px also rendered the doorway, opened the door and switched equipment categories without page errors.
+
+Lighthouse 13.6 measured 95 for mobile performance on the local static build. LCP was 2.94 s and CLS was 0.001. The opening made no requests for the 3D scene.
+
 ## Interactive product story
 
 Astro generated eleven pages. The eight Chromium scenarios cover every content route, anchor navigation, reversible 3D motion, keyboard operation of the door, equipment filtering, and the simulated quote. The quote check verifies the browser makes no requests during submission and stores no answers. Axe scans the primary routes, mobile opening and quote review.

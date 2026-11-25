@@ -8,7 +8,6 @@ import { company, route } from '../lib/site';
     <img src={route('images/story/valley-1920.webp')} alt="Evening light over the water near Vernon" width="1920" height="1080" loading="lazy" decoding="async" />
   </picture>
   <div class="evening-contact__shade" aria-hidden="true"></div>
-  <div class="evening-contact__echo" aria-hidden="true"></div>
   <div class="shell evening-contact__inner">
     <div>
       <h2 id="evening-contact-title">Let’s talk security.</h2>
@@ -20,19 +19,3 @@ import { company, route } from '../lib/site';
     </div>
   </div>
 </section>
-
-<script>
-  const close = document.querySelector<HTMLElement>('.evening-contact');
-  const echo = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
-  if (close) {
-    close.addEventListener('pointermove', (event) => {
-      if (!echo.matches || event.pointerType !== 'mouse') return;
-      const frame = close.getBoundingClientRect();
-      close.dataset.echo = '';
-      close.style.setProperty('--echo-x', `${(event.clientX - frame.x) / frame.width * 100}%`);
-      close.style.setProperty('--echo-y', `${46 + (event.clientY - frame.y) / frame.height * 40}%`);
-    }, { passive: true });
-    close.addEventListener('pointerleave', () => { delete close.dataset.echo; });
-    echo.addEventListener('change', () => { delete close.dataset.echo; });
-  }
-</script>

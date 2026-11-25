@@ -4,18 +4,18 @@ import { route } from '../lib/site';
 const chapters = [
   {
     key: 'door',
-    label: 'At the door',
+    label: 'Detection',
     title: 'The door opens.',
     text: 'When the alarm is armed, the door sensor detects the opening and tells the system.',
     model: 'Ajax DoorProtect',
     image: 'door-still.webp',
-    alt: 'An Ajax door sensor and its matching magnet on opposite sides of a door frame',
+    alt: 'An Ajax sensor and magnet on opposite sides of a door frame',
   },
   {
     key: 'hub',
-    label: 'Inside the system',
-    title: 'The alert goes out.',
-    text: 'The hub connects the devices at your property. On a monitored system, it sends the alarm to the monitoring centre.',
+    label: 'Alert',
+    title: 'The signal goes out.',
+    text: 'The hub connects the equipment at your property. If you have monitoring, it sends the alert to the monitoring centre.',
     model: 'Ajax Hub 2',
     image: 'hub-still.webp',
     alt: 'An Ajax Hub with a smooth square face and rounded corners',
@@ -24,8 +24,8 @@ const chapters = [
     key: 'response',
     label: '24/7 monitoring',
     title: 'A person answers.',
-    text: 'An operator sees what triggered the alarm and follows the contact instructions you’ve set for your property.',
-    model: '',
+    text: 'An operator sees which alarm came in and follows the contact instructions you’ve set for your property.',
+    model: 'Monitoring example',
     image: 'response-still.webp',
     alt: 'A phone showing an Ajax system beside its alarm hub',
   },
@@ -33,34 +33,14 @@ const chapters = [
 ---
 
 <section class="signal-story" id="system" data-signal-story aria-label="How a monitored alarm works">
-  <div class="signal-stage" aria-hidden="true" data-signal-stage>
-    <div class="signal-stage__wash"></div>
-    <div class="signal-stage__view" data-signal-view>
-      <canvas data-signal-canvas></canvas>
-      <div class="signal-stage__response" data-signal-response>
-        <img src={route('images/story/response-still.webp')} alt="" width="960" height="640" loading="lazy" decoding="async" />
-        <div class="signal-receipt">
-          <div class="signal-receipt__route"><span></span> Monitoring centre</div>
-          <strong>Front door alarm</strong>
-          <p>Alert received <span>Contact plan started</span></p>
-        </div>
-      </div>
-      <div class="signal-stage__axis"></div>
-      <span class="signal-stage__caption" data-signal-caption>Ajax DoorProtect</span>
-      <span class="signal-stage__status" data-signal-status><span></span><span data-signal-status-label>Door closed</span></span>
-    </div>
-  </div>
+  <div class="signal-stage" aria-hidden="true" data-signal-stage hidden><canvas data-signal-canvas></canvas></div>
   <div class="shell signal-steps">
     {chapters.map(({ key, label, title, text, model, image, alt }, index) => (
-      <article id={`signal-${key}`} class="signal-step" data-signal-step={index} aria-labelledby={`signal-title-${key}`}>
-        <figure class="signal-step__image">
-          <img src={route('images/story/' + image)} alt={alt} width="960" height="640" loading="lazy" decoding="async" />
-        </figure>
+      <article id={`signal-${key}`} class:list={['signal-step', `signal-step--${key}`]} data-signal-step={index} aria-labelledby={`signal-title-${key}`}>
         <div class="signal-step__body">
-          <p class="story-label"><span class="story-label__dot" aria-hidden="true"></span>{label}</p>
+          <p class="story-label">{label}</p>
           <h2 id={`signal-title-${key}`}>{title}</h2>
           <p class="signal-step__text">{text}</p>
-          {model && <p class="signal-step__model">{model}</p>}
           {key === 'door' && (
             <button class="signal-step__action" type="button" data-signal-door hidden>
               <span class="signal-step__action-icon" aria-hidden="true">↗</span><span data-signal-door-label>Open the door</span>
@@ -68,6 +48,20 @@ const chapters = [
             <p class="visually-hidden" data-signal-door-announcement role="status"></p>
           )}
         </div>
+        <figure class="signal-step__image">
+          <div class="signal-shot" data-signal-slot={key}>
+            <img src={route('images/story/' + image)} alt={alt} width="960" height="640" loading="lazy" decoding="async" />
+            {key === 'response' && <div class="signal-receipt" aria-hidden="true">
+              <div class="signal-receipt__route"><span></span> Monitoring centre</div>
+              <strong>Front door alarm</strong>
+              <p>Alert received · Contact plan started</p>
+            </div>}
+          </div>
+          <figcaption>
+            <span>{model}</span>
+            {key === 'door' && <span class="signal-stage__status" data-signal-status-label hidden>Door closed</span>}
+          </figcaption>
+        </figure>
       </article>
     ))}
   </div>

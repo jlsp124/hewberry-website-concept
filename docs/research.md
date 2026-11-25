@@ -57,6 +57,10 @@ Statistics Canada reported 109,753 police-reported incidents of breaking and ent
 
 ## Design research
 
+### Local break-in figure
+
+Statistics Canada table 35-10-0184-01 records 200 actual incidents of breaking and entering in 2025 for the Vernon municipal RCMP detachment. This is violation code 2120, coordinate 92.66.1 and vector v71393998 in the English CSV. The homepage labels the detachment, year and source. The number is local context for the walkthrough. [Statistics Canada table](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3510018401)
+
 ### Ajax product-story scope
 
 The demo is designed around representative Ajax hardware at the requester’s direction. The equipment guide covers door and glass detection, motion, sirens, system control, video and environmental detection. Product functions and names were checked against [Ajax Systems](https://ajax.systems/products/) and examples in the [ADI Canada Ajax catalogue](https://www.en.adiglobaldistribution.ca/catalog/shop-brands/ajax/). Hewberry’s current model list and individual monitoring agreements still need company confirmation.

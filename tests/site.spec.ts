@@ -50,7 +50,7 @@ test('compact mobile navigation leads to systems, contact and a prefilled quote'
   await expect(page.locator('#contact a[href="tel:+17784754320"]')).toBeInViewport();
   await menu.getByRole('link', { name: 'Systems', exact: true }).click();
   await expect(page).toHaveURL(/#services$/);
-  await expect(page.getByRole('heading', { name: 'What we install.' })).toBeInViewport();
+  await expect(page.locator('#installation-title')).toBeInViewport();
   await page.locator('#services').getByRole('link', { name: 'Businesses' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Security for the way your business works.');
   await page.locator('main').getByRole('link', { name: 'Get a quote' }).first().click();
@@ -68,9 +68,12 @@ test('the 3D door can open and close and the scroll story reverses cleanly', asy
   const story = page.locator('[data-signal-story]');
   const stage = story.locator('[data-signal-stage]');
   const first = page.locator('#signal-door');
+  const doorFrame = first.locator('[data-signal-slot]');
   await page.locator('.evening__photo img').evaluate((image) => (image as HTMLImageElement).decode());
   expect(modelRequests).toHaveLength(0);
-  await first.evaluate((step) => step.scrollIntoView({ block: 'start', behavior: 'instant' }));
+  await expect(page.getByRole('heading', { name: /200 break-ins/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Statistics Canada' })).toHaveAttribute('href', /3510018401/);
+  await doorFrame.evaluate((step) => step.scrollIntoView({ block: 'center', behavior: 'instant' }));
   await expect(story).toHaveAttribute('data-webgl', 'true');
   expect(modelRequests).toHaveLength(1);
   await expect(stage).toHaveAttribute('data-beat', 'door');
@@ -79,16 +82,25 @@ test('the 3D door can open and close and the scroll story reverses cleanly', asy
   const button = first.getByRole('button', { name: 'Open the door' });
   await button.focus();
   await page.keyboard.press('Enter');
-  await expect(stage).toHaveAttribute('data-door-open', 'true');
+  await expect(first.locator('[data-signal-status-label]')).toHaveAttribute('data-open', 'true');
   await expect(first.getByRole('status')).toHaveText(/sensor sends a signal/);
   await first.getByRole('button', { name: 'Close the door' }).click();
-  await expect(stage).toHaveAttribute('data-door-open', 'false');
+  await expect(first.locator('[data-signal-status-label]')).toHaveAttribute('data-open', 'false');
 
-  await page.locator('#signal-hub').evaluate((step) => step.scrollIntoView({ block: 'start', behavior: 'instant' }));
+  await page.setViewportSize({ width: 2530, height: 1210 });
+  const hubFrame = page.locator('#signal-hub [data-signal-slot]');
+  await hubFrame.evaluate((step) => step.scrollIntoView({ block: 'center', behavior: 'instant' }));
   await expect(stage).toHaveAttribute('data-beat', 'hub');
-  await page.locator('#signal-response').evaluate((step) => step.scrollIntoView({ block: 'start', behavior: 'instant' }));
+  await expect.poll(() => hubFrame.evaluate((slot) => {
+    const frame = slot.getBoundingClientRect();
+    const drawing = document.querySelector('[data-signal-stage]')!.getBoundingClientRect();
+    return Math.max(Math.abs(frame.x - drawing.x), Math.abs(frame.y - drawing.y),
+      Math.abs(frame.width - drawing.width), Math.abs(frame.height - drawing.height));
+  })).toBeLessThan(2);
+  await page.locator('#signal-response [data-signal-slot]').evaluate((step) => step.scrollIntoView({ block: 'center', behavior: 'instant' }));
   await expect(stage).toHaveAttribute('data-beat', 'response');
-  await first.evaluate((step) => step.scrollIntoView({ block: 'start', behavior: 'instant' }));
+  await expect(stage).toBeHidden();
+  await doorFrame.evaluate((step) => step.scrollIntoView({ block: 'center', behavior: 'instant' }));
   await expect(stage).toHaveAttribute('data-beat', 'door');
   await expect(first.getByRole('button', { name: 'Open the door' })).toBeInViewport();
 
@@ -96,6 +108,8 @@ test('the 3D door can open and close and the scroll story reverses cleanly', asy
   const stageBottom = await stage.evaluate((element) => element.getBoundingClientRect().bottom);
   const guideTop = await page.locator('#services').evaluate((element) => element.getBoundingClientRect().top);
   expect(stageBottom).toBeLessThanOrEqual(guideTop + 1);
+  await page.locator('#services').getByRole('link', { name: 'Businesses', exact: true }).hover();
+  await expect(page.locator('[data-installation-image="1"]')).toHaveClass(/is-current/);
 
   await page.goto('./monitoring/');
   const sequence = page.locator('[data-signal-sequence]');
@@ -107,6 +121,9 @@ test('the equipment guide exposes images and switchable Ajax categories on mobil
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./');
+  await expect(page.getByRole('table', { name: 'Ajax equipment examples and their uses' })).toHaveCount(0);
+  await page.getByRole('link', { name: 'Browse equipment examples' }).click();
+  await expect(page).toHaveURL(/technology\/#ajax-equipment$/);
   const table = page.getByRole('table', { name: 'Ajax equipment examples and their uses' });
   await expect(table.getByRole('rowheader')).toHaveText(['DoorProtect', 'MotionProtect', 'MotionCam', 'GlassProtect', 'HomeSiren']);
   const filter = page.getByRole('group', { name: 'Equipment category' });
@@ -118,8 +135,8 @@ test('the equipment guide exposes images and switchable Ajax categories on mobil
   await expect(table.getByRole('rowheader')).toHaveText(['FireProtect 2', 'LeaksProtect', 'WaterStop']);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
 
-  await page.goto('./technology/#ajax-equipment');
-  await expect(page.getByText('DoorProtect')).toBeVisible();
+  await filter.getByRole('button', { name: 'Detection' }).click();
+  await expect(table.getByRole('rowheader', { name: 'DoorProtect' })).toBeVisible();
   await page.locator('.catalogue summary').click();
   await expect(page.locator('.catalogue a[href*="/product/"]')).toHaveCount(14);
   await expect(page.getByText(/Google still supports existing devices/)).toBeVisible();
@@ -183,8 +200,9 @@ test('reduced motion, blocked imagery and script-free contact fallback', async (
   await fallback.goto('./');
   await expect(fallback.getByRole('heading', { name: 'A person answers.' })).toBeVisible();
   await expect(fallback.getByRole('button', { name: 'Open the door' })).toBeHidden();
-  await expect(fallback.getByRole('table', { name: 'Ajax equipment examples and their uses' }).getByRole('rowheader')).toHaveCount(13);
   await expect(fallback.locator('#contact a[href="tel:+17784754320"]')).toBeVisible();
+  await fallback.goto('./technology/#ajax-equipment');
+  await expect(fallback.getByRole('table', { name: 'Ajax equipment examples and their uses' }).getByRole('rowheader')).toHaveCount(13);
   await fallback.goto('./quote/');
   await expect(fallback.getByRole('link', { name: 'Hewberry’s contact page' })).toBeVisible();
   await expect(fallback.getByRole('button', { name: 'Continue' })).toBeHidden();
@@ -205,6 +223,10 @@ test('viewport sizes render loaded photography and stay within the screen', asyn
     });
     expect(broken, String(width)).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth), String(width)).toBe(width);
+    if (width >= 1440) {
+      const spread = await page.locator('#services > .shell').evaluate((shell) => shell.getBoundingClientRect().width / innerWidth);
+      expect(spread, String(width)).toBeGreaterThan(.88);
+    }
     await expect(page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Contact' })).toBeInViewport();
     await page.screenshot({ path: testInfo.outputPath('home-' + width + '.png'), fullPage: true });
   }
