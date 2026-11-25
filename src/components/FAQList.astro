@@ -1,0 +1,23 @@
+---
+import { faqs } from '../lib/faqs';
+import { route } from '../lib/site';
+interface Props { all?: boolean }
+const { all = false } = Astro.props;
+---
+<section class="faq-section section-space" id="faqs" aria-labelledby="faqs-title">
+  <div class="shell faq-layout">
+    <div>
+      <p class="eyebrow">Common questions</p>
+      <h2 id="faqs-title" class="display">Before you get started.</h2>
+      {!all && <a class="inline-link" href={route('support/#faqs')}>See all FAQs <span aria-hidden="true">↗</span></a>}
+    </div>
+    <div class="faq-list">
+      {(all ? faqs : faqs.slice(0, 3)).map(({ question, answer }) => (
+        <details name="faq" class="disclosure">
+          <summary>{question}<span class="plus" aria-hidden="true"></span></summary>
+          <p>{answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

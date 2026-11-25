@@ -1,0 +1,63 @@
+---
+import Brand from './Brand.astro';
+import { company, navigation, route } from '../lib/site';
+
+const { current } = Astro.props;
+---
+<div class="concept-bar">
+  <div class="shell concept-bar__inner">
+    <span>Independent website concept</span>
+    <a href={company.currentSite}>Current Hewberry website <span aria-hidden="true">↗</span></a>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <Brand />
+    <nav class="desktop-nav" aria-label="Main">
+      {navigation.map(({ name, path }) => (
+        <a href={route(path)} aria-current={current === route(path) ? 'page' : undefined}>{name}</a>
+      ))}
+    </nav>
+    <a class="button button--amber header-quote" href={route('quote/')} aria-current={current === route('quote/') ? 'page' : undefined}>
+      Get a quote <span class="arrow" aria-hidden="true">↗</span>
+    </a>
+    <details class="mobile-nav" data-mobile-nav>
+      <summary>
+        <span class="mobile-nav__open">Menu</span>
+        <span class="mobile-nav__close">Close</span>
+        <span class="menu-icon" aria-hidden="true"></span>
+      </summary>
+      <nav aria-label="Main">
+        {navigation.map(({ name, path }) => (
+          <a href={route(path)} aria-current={current === route(path) ? 'page' : undefined}>
+            {name}<span aria-hidden="true">↗</span>
+          </a>
+        ))}
+        <a href={route('quote/')} aria-current={current === route('quote/') ? 'page' : undefined}>Get a quote<span aria-hidden="true">↗</span></a>
+        <a class="mobile-nav__phone" href={company.telephone}>Call {company.phone}</a>
+      </nav>
+    </details>
+  </div>
+</header>
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>('[data-mobile-nav]');
+  const summary = menu?.querySelector('summary');
+
+  menu?.addEventListener('click', (event) => {
+    const target = event.target;
+    const link = target instanceof Element ? target.closest('a') : null;
+    if (link) {
+      menu.open = false;
+      if (link.hash && link.pathname === location.pathname) {
+        document.getElementById(link.hash.slice(1))?.focus({ preventScroll: true });
+      }
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && menu?.open) {
+      menu.open = false;
+      summary?.focus();
+    }
+  });
+</script>

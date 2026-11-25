@@ -1,0 +1,20 @@
+---
+import { route } from '../lib/site';
+import { photos } from '../lib/photos';
+interface Props { image: keyof typeof photos; sizes?: string; class?: string }
+const { image, sizes = '(min-width: 850px) 45vw, 94vw', class: className } = Astro.props;
+const { alt, caption } = photos[image];
+---
+<figure class:list={['photo', className]}>
+  <img
+    src={route('images/' + image + '-640.webp')}
+    srcset={route('images/' + image + '-640.webp') + ' 640w, ' + route('images/' + image + '-1050.webp') + ' 1050w'}
+    sizes={sizes}
+    width="1050"
+    height="840"
+    loading="lazy"
+    decoding="async"
+    alt={alt}
+  />
+  <figcaption><a href={route('photo-credits/#' + image)}>{caption} <span aria-hidden="true">↗</span></a></figcaption>
+</figure>

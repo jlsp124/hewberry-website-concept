@@ -1,0 +1,70 @@
+---
+import Site from '../layouts/Site.astro';
+import Monitoring from '../components/Monitoring.astro';
+import Photo from '../components/Photo.astro';
+import QuoteBand from '../components/QuoteBand.astro';
+import { company, route } from '../lib/site';
+import { services } from '../lib/services';
+
+export function getStaticPaths() {
+  return services.map((service) => ({ params: { service: service.slug }, props: { service } }));
+}
+
+const { service } = Astro.props;
+const monitoring = service.slug === 'monitoring';
+---
+<Site title={service.label} description={service.description}>
+  <section class:list={['page-lead', service.photo && 'page-lead--photo']} aria-labelledby="page-title">
+    <div class="shell">
+      <a class="breadcrumb" href={route('#services')}><span aria-hidden="true">←</span> All services</a>
+      <div class="page-lead__grid">
+        <div>
+          <p class="eyebrow">{service.label}</p>
+          <h1 id="page-title" class="display">{service.headline}</h1>
+          <p class="page-lead__text">{service.description}</p>
+          <a class="button button--amber" href={route(service.quote)}>Get a quote <span class="arrow" aria-hidden="true">↗</span></a>
+        </div>
+        {service.photo && <Photo image={service.photo} />}
+      </div>
+    </div>
+  </section>
+  {monitoring && <Monitoring detail />}
+  <section class="detail-list section-space" aria-labelledby="options-title">
+    <div class="shell detail-layout">
+      <div>
+        <p class="eyebrow">Options for your property</p>
+        <h2 class="display" id="options-title">What to ask about.</h2>
+        <p>{service.prompt}</p>
+      </div>
+      <ul class="detail-list__items">
+        {service.capabilities.map(({ title, text }) => (
+          <li><h3>{title}</h3><p>{text}</p></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+  {monitoring && (
+    <section class="station-note section-space">
+      <div class="shell detail-layout">
+        <h2 class="display">Your monitoring station.</h2>
+        <div>
+          <p>The Greater Vernon Chamber lists Hewberry alongside Prestige Monitoring Station Inc. Prestige describes a 24/7 monitoring service based in Kamloops.</p>
+          <p>Check your account paperwork or call Hewberry to confirm who monitors your system and which response instructions apply.</p>
+          <a class="inline-link" href={route('support/')}>Help with an existing system <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+  )}
+  {service.slug === 'technology' && (
+    <section class="station-note section-space">
+      <div class="shell detail-layout">
+        <h2 class="display">Looking for a part?</h2>
+        <div>
+          <p>Hewberry’s current site lists replacement components. Confirm stock and compatibility with the Vernon office before ordering.</p>
+          <a class="inline-link" href={company.currentSite + 'shop/'}>Open Hewberry’s parts catalogue <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+  )}
+  <QuoteBand href={service.quote} />
+</Site>

@@ -1,0 +1,33 @@
+---
+import Site from '../layouts/Site.astro';
+import FAQList from '../components/FAQList.astro';
+import Hero from '../components/Hero.astro';
+import Monitoring from '../components/Monitoring.astro';
+import Photo from '../components/Photo.astro';
+import QuoteBand from '../components/QuoteBand.astro';
+import Services from '../components/Services.astro';
+import { company, route } from '../lib/site';
+---
+<Site
+  home
+  title="Hewberry Alarms | Security installation and monitoring in Vernon, BC"
+  description="Explore Hewberry Alarms’ residential and commercial security, professional monitoring, and pre-wiring in Vernon and the Okanagan. Independent website concept."
+>
+  <Hero />
+  <Services />
+  <Monitoring />
+  <section class="local section-space" aria-labelledby="local-heading">
+    <div class="shell local__inner">
+      <Photo image="valley" class="local__photo" />
+      <div class="local__copy">
+        <p class="eyebrow">Locally owned and operated</p>
+        <h2 id="local-heading" class="display">Based in Vernon.<br />Across the Valley.</h2>
+        <p>Hewberry works with homeowners, businesses and builders throughout the Okanagan and beyond. Call the Vernon office to talk through a new project or get help with an existing system.</p>
+        <a class="inline-link" href={route('about/')}>About Hewberry <span aria-hidden="true">↗</span></a>
+        <p class="local__phone">Vernon office <a href={company.telephone}>{company.phone}</a></p>
+      </div>
+    </div>
+  </section>
+  <FAQList />
+  <QuoteBand />
+</Site>

@@ -1,0 +1,90 @@
+import { quotePath } from './quote';
+
+export const services = [
+  {
+    slug: 'residential',
+    label: 'Residential security',
+    headline: 'Security that fits your home.',
+    summary: 'Alarms, cameras and detection for the place you come home to.',
+    description: 'Plan an alarm system around your household. Hewberry installs new systems and services existing equipment, with options for cameras, detection and professional monitoring.',
+    photo: 'residential',
+    quote: quotePath('home'),
+    capabilities: [
+      { title: 'Alarms and motion detection', text: 'Talk through how your household uses the property and which detection options fit your needs.' },
+      { title: 'Cameras and video', text: 'Discuss what you want to be able to see, from everyday comings and goings to activity while you’re away.' },
+      { title: 'Fire and water detection', text: 'Ask which detection and monitoring options work with a new or existing system.' },
+      { title: 'Service and upgrades', text: 'If you already have an alarm, Hewberry can discuss its condition, compatibility and upgrade options.' },
+    ],
+    prompt: 'Tell us whether you’re starting fresh or already have an alarm, and which features matter most to you.',
+  },
+  {
+    slug: 'commercial',
+    label: 'Commercial security',
+    headline: 'Security for the way your business works.',
+    summary: 'Alarms, video and door access for businesses and shared properties.',
+    description: 'Hewberry supplies and installs alarms, camera systems and door access for commercial and institutional properties. Start with how people use the site and what your team needs to manage.',
+    photo: 'commercial',
+    quote: quotePath('business'),
+    capabilities: [
+      { title: 'Security alarms', text: 'Plan a system for the way your property opens, closes and operates outside business hours.' },
+      { title: 'CCTV and video', text: 'Discuss where video is useful and how authorized staff should be able to use it.' },
+      { title: 'Door access', text: 'Explore card or keypad access and how to handle different permissions for staff and visitors.' },
+      { title: 'Monitoring and service', text: 'Ask about professional monitoring, maintenance and upgrades for a new or existing system.' },
+    ],
+    prompt: 'Bring your property type and the goals for your site. Hewberry can help you decide what to discuss in a walkthrough.',
+  },
+  {
+    slug: 'construction',
+    label: 'Construction and pre-wiring',
+    headline: 'Plan security before the walls close.',
+    summary: 'Make room for alarms, video and networking while the build is still open.',
+    description: 'Hewberry provides pre-wiring for new builds and renovations. Start the conversation while the project is still being planned so security, access and networking can be coordinated with the work on site.',
+    photo: 'construction',
+    quote: quotePath('build', 'wiring'),
+    capabilities: [
+      { title: 'Alarm pre-wiring', text: 'Consider alarm wiring while the project team still has access to the framing.' },
+      { title: 'Video and access planning', text: 'Discuss camera and door-access needs early enough to coordinate cabling with other trades.' },
+      { title: 'Media and networking', text: 'Ask about low-voltage wiring for network, media and intercom needs.' },
+      { title: 'Residential and commercial projects', text: 'Share the type and stage of your build so Hewberry can discuss timing and scope.' },
+    ],
+    prompt: 'Have your build stage and approximate timeline ready. Share project drawings only through a channel agreed with Hewberry.',
+  },
+  {
+    slug: 'monitoring',
+    label: '24/7 monitoring',
+    headline: 'A person on the other end.',
+    summary: 'A monitoring station can act on a signal according to your response plan.',
+    description: 'Hewberry offers 24/7 security alarm monitoring for homes and businesses. A monitoring station receives supported signals and follows the response instructions for your account.',
+    photo: null,
+    quote: quotePath(undefined, 'monitoring'),
+    capabilities: [
+      { title: 'Home and business alarms', text: 'Ask which signals can be monitored on the system you have or plan to install.' },
+      { title: 'Contact and response instructions', text: 'Confirm who should be called, when they should be called and what happens if they are unavailable.' },
+      { title: 'Fire or water detection', text: 'Talk to Hewberry about equipment compatibility and which events your monitoring plan can handle.' },
+      { title: 'An existing alarm', text: 'Ask Hewberry to check your equipment and communication options before switching or adding a plan.' },
+    ],
+    prompt: 'Ask about the monitoring station for your account, what its service covers and how to keep your contact list current.',
+  },
+  {
+    slug: 'technology',
+    label: 'Equipment and upgrades',
+    headline: 'The right equipment for your property.',
+    summary: 'Discuss compatibility, new equipment and upgrades with a local installer.',
+    description: 'Hewberry supplies, installs and services security equipment. The right mix of sensors, cameras and access controls depends on the property, the existing system and how you want to use it.',
+    photo: null,
+    quote: quotePath(undefined, 'existing'),
+    capabilities: [
+      { title: 'Alarm panels and sensors', text: 'Review what your current system can support and what would need replacement before expanding it.' },
+      { title: 'Cameras and recording', text: 'Talk through how video will be used, who needs access and what viewing options the equipment supports.' },
+      { title: 'Access equipment', text: 'Explore keypad and card access for the people who use the property day to day.' },
+      { title: 'Maintenance and replacement parts', text: 'Call to check compatibility and availability before ordering or replacing a component.' },
+    ],
+    prompt: 'Have the make or model ready if you know it. Hewberry can discuss what can be kept, serviced or upgraded.',
+  },
+] as const;
+
+export const signalSteps = [
+  { title: 'A signal is sent', text: 'A supported event sends a signal from your system.' },
+  { title: 'An operator reviews it', text: 'The monitoring station checks the event and your account instructions.' },
+  { title: 'Your plan guides the response', text: 'The operator follows the agreed steps for that type of signal.' },
+];

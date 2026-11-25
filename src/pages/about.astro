@@ -1,0 +1,46 @@
+---
+import Site from '../layouts/Site.astro';
+import Photo from '../components/Photo.astro';
+import QuoteBand from '../components/QuoteBand.astro';
+import { company } from '../lib/site';
+---
+<Site title="About Hewberry" description="Get to know Hewberry Alarms, a locally owned security installation and monitoring company based in Vernon, British Columbia.">
+  <section class="page-lead page-lead--photo" aria-labelledby="page-title">
+    <div class="shell page-lead__grid">
+      <div>
+        <p class="eyebrow">About Hewberry Alarms</p>
+        <h1 id="page-title" class="display">A Vernon team for your property.</h1>
+        <p class="page-lead__text">Locally owned and operated, Hewberry works with homeowners, businesses and builders on security installation, upgrades and monitoring.</p>
+      </div>
+      <Photo image="valley" />
+    </div>
+  </section>
+  <section class="detail-list section-space" aria-labelledby="work-title">
+    <div class="shell detail-layout">
+      <div>
+        <p class="eyebrow">Working with Hewberry</p>
+        <h2 id="work-title" class="display">From planning to service.</h2>
+        <a class="inline-link" href={company.chamber}>Greater Vernon Chamber listing <span aria-hidden="true">↗</span></a>
+      </div>
+      <ul class="detail-list__items">
+        <li><h3>Talk through the property</h3><p>Start with how the space is used, which equipment is already there and what you’d like the system to do.</p></li>
+        <li><h3>Plan and install</h3><p>Discuss the equipment, wiring and monitoring options that make sense for your property and project stage.</p></li>
+        <li><h3>Keep it working</h3><p>Contact the Vernon office for maintenance, replacement components, upgrades or help with an existing system.</p></li>
+      </ul>
+    </div>
+  </section>
+  <section class="station-note section-space" id="service-area" aria-labelledby="area-title">
+    <div class="shell detail-layout">
+      <div>
+        <p class="eyebrow">Service area</p>
+        <h2 id="area-title" class="display">Vernon and the Okanagan.</h2>
+      </div>
+      <div>
+        <p>The Vernon office supports projects across the Valley and beyond. Call with your community and project type to confirm availability.</p>
+        <a class="inline-link" href={company.telephone}>{company.phone} <span aria-hidden="true">↗</span></a>
+        <p><a href={company.map}>{company.address} <span aria-hidden="true">↗</span></a></p>
+      </div>
+    </div>
+  </section>
+  <QuoteBand />
+</Site>

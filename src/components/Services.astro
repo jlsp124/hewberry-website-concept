@@ -1,0 +1,56 @@
+---
+import { services } from '../lib/services';
+import { route } from '../lib/site';
+import { photos } from '../lib/photos';
+import Photo from './Photo.astro';
+
+const first = services[0];
+const displayPhotos = ['residential', 'commercial', 'construction', 'monitoring'] satisfies (keyof typeof photos)[];
+---
+<section class="services section-space" id="services" tabindex="-1" aria-labelledby="services-heading" data-services>
+  <div class="shell">
+    <div class="section-intro">
+      <div>
+        <p class="eyebrow">Security services</p>
+        <h2 class="display" id="services-heading">Built around<br class="wide-break" /> your property.</h2>
+      </div>
+      <p class="section-intro__text">Start with what you need to protect. Hewberry can plan, install and service the system around it.</p>
+    </div>
+    <div class="service-index">
+      <div class="service-index__list">
+        {services.slice(0, 4).map(({ slug, label, summary, photo }) => (
+          <details class="disclosure service-row" name="service" open={slug === first.slug} data-service={photo ?? 'monitoring'}>
+            <summary>{label}<span class="plus" aria-hidden="true"></span></summary>
+            <div class="service-row__body">
+              <p>{summary}</p>
+              <a class="inline-link" href={route(slug + '/')}>Explore {label.toLowerCase()} <span aria-hidden="true">↗</span></a>
+            </div>
+          </details>
+        ))}
+        <a class="service-row service-row--link" href={route('technology/')}>
+          Equipment and upgrades <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+      <div class="service-index__photos">
+        {displayPhotos.map((photo) => (
+          <div data-service-photo={photo} hidden={photo !== first.photo}>
+            <Photo image={photo} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  const services = document.querySelector('[data-services]');
+  const photography = services?.querySelectorAll<HTMLElement>('[data-service-photo]');
+
+  services?.addEventListener('toggle', (event) => {
+    const disclosure = event.target;
+    if (disclosure instanceof HTMLDetailsElement && disclosure.open) {
+      photography?.forEach((figure) => {
+        figure.hidden = figure.dataset.servicePhoto !== disclosure.dataset.service;
+      });
+    }
+  }, { capture: true });
+</script>

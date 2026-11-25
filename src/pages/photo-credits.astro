@@ -1,0 +1,31 @@
+---
+import Site from '../layouts/Site.astro';
+import { openingPhoto, photos } from '../lib/photos';
+
+const images = [['home-at-dusk', openingPhoto], ...Object.entries(photos)] as const;
+---
+<Site title="Photography credits" description="Sources, photographers and reuse terms for the photographs in the Hewberry Alarms website concept.">
+  <section class="page-lead">
+    <div class="shell">
+      <p class="eyebrow">About this concept</p>
+      <h1 class="display">Photography credits.</h1>
+      <p class="page-lead__text">The property photographs are editorial examples. Kalamalka Lake is shown as photographed near Oyama, British Columbia.</p>
+    </div>
+  </section>
+  <section class="section-space">
+    <div class="shell">
+      <div class="credits-list">
+        {images.map(([id, photo]) => (
+          <article id={id}>
+            <h2>{photo.caption}</h2>
+            <p>
+              {photo.author} · <a href={photo.terms}>{photo.license}</a>.
+              {id === 'valley' && ' The WebP variants are cropped and resized and are distributed under the same licence.'}
+            </p>
+            <a class="inline-link" href={photo.source}>View source photograph <span aria-hidden="true">↗</span></a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Site>

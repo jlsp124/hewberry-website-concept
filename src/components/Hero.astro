@@ -1,0 +1,35 @@
+---
+import { route } from '../lib/site';
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__scene" aria-hidden="true">
+    <picture class="hero__picture">
+      <source
+        media="(max-width: 600px)"
+        srcset={route('images/hero-mobile-480.webp') + ' 480w, ' + route('images/hero-mobile-800.webp') + ' 800w'}
+        sizes="100vw"
+      />
+      <img
+        src={route('images/hero-1440.webp')}
+        srcset={route('images/hero-960.webp') + ' 960w, ' + route('images/hero-1440.webp') + ' 1440w, ' + route('images/hero-1920.webp') + ' 1920w'}
+        sizes="(min-width: 900px) 86vw, 100vw"
+        width="1440"
+        height="960"
+        fetchpriority="high"
+        alt=""
+      />
+    </picture>
+  </div>
+  <div class="shell hero__inner">
+    <div class="hero__copy">
+      <p class="eyebrow hero__location">Vernon, British Columbia</p>
+      <h1 id="hero-title"><span>Security,</span><span>close to home.</span></h1>
+      <p class="hero__intro">Security systems installed and monitored for homes and businesses in the Okanagan.</p>
+      <div class="hero__actions">
+        <a class="button button--amber" href={route('quote/')}>Get a quote <span class="arrow" aria-hidden="true">↗</span></a>
+        <a class="inline-link" href="#services">Explore services <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+    <a class="hero__credit" href={route('photo-credits/#home-at-dusk')}>Example property photo <span aria-hidden="true">↗</span></a>
+  </div>
+</section>
