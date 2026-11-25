@@ -52,9 +52,9 @@ export const services = [
   {
     slug: 'monitoring',
     label: '24/7 monitoring',
-    headline: 'A person on the other end.',
-    summary: 'A monitoring station can act on a signal according to your response plan.',
-    description: 'Hewberry offers 24/7 security alarm monitoring for homes and businesses. A monitoring station receives supported signals and follows the response instructions for your account.',
+    headline: '24/7 alarm monitoring.',
+    summary: 'An operator can receive an alarm alert when you’re away.',
+    description: 'If your monitored alarm goes off, an operator at a monitoring centre can receive the alert and follow your instructions, even when you’re away.',
     photo: null,
     quote: quotePath(undefined, 'monitoring'),
     capabilities: [
@@ -84,7 +84,7 @@ export const services = [
 ] as const;
 
 export const signalSteps = [
-  { title: 'A signal is sent', text: 'A supported event sends a signal from your system.' },
-  { title: 'An operator reviews it', text: 'The monitoring station checks the event and your account instructions.' },
-  { title: 'Your plan guides the response', text: 'The operator follows the agreed steps for that type of signal.' },
+  { title: 'Your alarm sends an alert', text: 'Your system reports an alarm event to the monitoring centre.' },
+  { title: 'An operator checks it', text: 'They see which type of alert came in and check the instructions you set.' },
+  { title: 'They follow your instructions', text: 'That may mean calling you or another person on your account.' },
 ];

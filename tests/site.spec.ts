@@ -15,6 +15,7 @@ test('all routes serve valid headings, metadata and relative links', async ({ pa
     expect((await page.goto(route))?.status(), route).toBe(200);
     await expect(page.locator('main h1')).toHaveCount(1);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+    await expect(page.locator('figure a')).toHaveCount(0);
     const links = await page.locator('a[href]').evaluateAll((items) =>
       items.map((item) => (item as HTMLAnchorElement).href),
     );
@@ -38,69 +39,67 @@ test('all routes serve valid headings, metadata and relative links', async ({ pa
   expect(errors).toEqual([]);
 });
 
-test('mobile menu and service disclosures support touch and keyboard', async ({ page }) => {
+test('compact mobile navigation leads to systems, contact and a prefilled quote', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('./');
-  const menu = page.locator('[data-mobile-nav]');
-  await menu.locator('summary').focus();
+  const menu = page.getByRole('navigation', { name: 'Main' });
+  await expect(menu.getByRole('link')).toHaveText(['Systems', 'Contact']);
+  await menu.getByRole('link', { name: 'Contact' }).focus();
   await page.keyboard.press('Enter');
-  await expect(menu.getByRole('link', { name: 'Customer support' })).toBeVisible();
-  await page.keyboard.press('Escape');
-  await expect(menu).not.toHaveAttribute('open');
-  await expect(menu.locator('summary')).toBeFocused();
-  await menu.locator('summary').click();
-  await menu.getByRole('link', { name: 'Services', exact: true }).click();
+  await expect(page).toHaveURL(/#contact$/);
+  await expect(page.locator('#contact a[href="tel:+17784754320"]')).toBeInViewport();
+  await menu.getByRole('link', { name: 'Systems', exact: true }).click();
   await expect(page).toHaveURL(/#services$/);
-  await expect(page.locator('#services')).toBeFocused();
-  const commercial = page.locator('summary').filter({ hasText: 'Commercial security' });
-  await commercial.focus();
-  await page.keyboard.press('Enter');
-  await expect(page.locator('[data-service-photo="commercial"]')).toBeVisible();
-  await expect(page.locator('[data-service-photo="residential"]')).toBeHidden();
-  await page.locator('#services').getByRole('link', { name: 'Explore commercial security' }).click();
+  await expect(page.getByRole('heading', { name: 'What we install.' })).toBeInViewport();
+  await page.locator('#services').getByRole('link', { name: 'Cameras' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Security for the way your business works.');
   await page.locator('main').getByRole('link', { name: 'Get a quote' }).first().click();
   await expect(page.getByRole('radio', { name: /My business/ })).toBeChecked();
 });
 
-test('native scrolling moves the opening and advances the desktop system story', async ({ page }) => {
+test('native scrolling and a mouse move change one property, then the sample can be replayed', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('./');
-  const picture = page.locator('.hero__picture');
-  const scrollAnimationSupported = await page.evaluate(() => CSS.supports('animation-timeline: view()'));
-  if (scrollAnimationSupported) {
-    const initial = await picture.evaluate((element) => getComputedStyle(element).transform);
-    await page.evaluate(() => window.scrollTo(0, 340));
-    await expect.poll(() => picture.evaluate((element) => getComputedStyle(element).transform)).not.toBe(initial);
-  }
-  const stage = page.locator('[data-stage]');
-  await expect(stage).toBeVisible();
-  for (const id of ['detect', 'see', 'access', 'connect', 'monitor']) {
-    await page.locator('#system-' + id).evaluate((chapter) => chapter.scrollIntoView({ block: 'center' }));
-    await expect(stage).toHaveAttribute('data-scene', id);
-    await expect(page.locator('[data-chapter-link="' + id + '"]')).toHaveAttribute('aria-current', 'location');
-    await expect.poll(() => stage.locator('img').evaluate((img) => (img as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
-  }
-  await expect(page.locator('.system-story__contact').getByRole('link', { name: /778-475-4320/ })).toHaveAttribute('href', 'tel:+17784754320');
+  const stage = page.locator('[data-journey-stage]');
+  const picture = stage.locator('img');
+  await expect(page.locator('[data-property-journey]')).toHaveAttribute('data-immersive', 'true');
+  await picture.evaluate((img) => img.decode());
+  const original = await picture.evaluate((img) => img.currentSrc);
+  await page.mouse.move(312, 343);
+  await expect.poll(() => stage.evaluate((element) => parseFloat(element.style.getPropertyValue('--journey-pan-x')))).toBeGreaterThan(2);
+  await page.locator('#system').evaluate((chapter) => chapter.scrollIntoView({ block: 'center' }));
+  await expect.poll(() => stage.evaluate((element) => parseFloat(element.style.getPropertyValue('--journey-progress')))).toBeGreaterThan(.25);
+  await expect(stage).toHaveAttribute('data-beat', 'door');
+  await expect(picture).toHaveJSProperty('currentSrc', original);
+
+  const demo = page.locator('[data-alert-example]');
+  const button = demo.getByRole('button', { name: 'Play example' });
+  await button.focus();
+  await expect(stage).toHaveAttribute('data-beat', 'response');
+  await page.keyboard.press('Enter');
+  await expect(demo).toHaveAttribute('data-alert-state', 'playing');
+  await expect(demo.getByRole('status')).toHaveText(/operator received the alert/);
+  await demo.getByRole('button', { name: 'Replay example' }).click();
+  await expect(demo).toHaveAttribute('data-alert-state', 'playing');
+  await expect(demo).toHaveAttribute('data-alert-state', 'complete');
   await page.goto('./monitoring/');
   const sequence = page.locator('[data-signal-sequence]');
   await sequence.scrollIntoViewIfNeeded();
   await expect(sequence).toHaveClass(/signal-played/);
 });
 
-test('equipment chapters remain readable on mobile and the parts guide lists every source product', async ({ page }) => {
+test('the installation table and Ajax examples remain readable on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./');
-  await page.getByRole('link', { name: 'See how it works' }).click();
-  await expect(page).toHaveURL(/#system$/);
-  const chapters = page.locator('[data-chapter]');
-  await expect(chapters).toHaveCount(5);
-  await expect(chapters.locator('figure:visible')).toHaveCount(5);
-  await expect(page.locator('[data-stage]')).toBeHidden();
-  await chapters.first().getByRole('link', { name: 'Explore alarm equipment' }).click();
-  await expect(page).toHaveURL(/\/technology\/#alarm-equipment$/);
+  const table = page.getByRole('table', { name: 'Security installation and monitoring services' });
+  await expect(table.getByRole('rowheader')).toHaveCount(6);
+  await page.getByRole('link', { name: 'See equipment examples and what they do' }).click();
+  await expect(page).toHaveURL(/\/technology\/#ajax-equipment$/);
+  await expect(page.getByText('DoorProtect')).toBeInViewport();
+  await expect(page.getByText(/Hewberry can confirm which models/)).toBeVisible();
+  await page.locator('.catalogue summary').click();
   await expect(page.locator('.catalogue a[href*="/product/"]')).toHaveCount(14);
   await expect(page.getByText(/Google still supports existing devices/)).toBeVisible();
 });
@@ -150,8 +149,11 @@ test('reduced motion, blocked imagery and script-free contact fallback', async (
   await page.route('**/*.webp', (request) => request.abort());
   await page.goto('./');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  await expect(page.locator('.hero__picture img')).toHaveCSS('animation-name', 'none');
-  await expect(page.locator('main').getByRole('link', { name: 'Get a quote' }).first()).toBeVisible();
+  await expect(page.locator('[data-property-journey]')).not.toHaveAttribute('data-immersive');
+  const example = page.locator('[data-alert-example]');
+  await example.getByRole('button', { name: 'Play example' }).click();
+  await expect(example).toHaveAttribute('data-alert-state', 'complete');
+  await expect(page.locator('#contact').getByRole('link', { name: 'Try the quote form' })).toBeVisible();
   await page.goto('./support/');
   await expect(page.locator('main a[href="tel:+17784754320"]')).toHaveCount(1);
   await page.locator('summary').filter({ hasText: /existing alarm/ }).click();
@@ -159,6 +161,10 @@ test('reduced motion, blocked imagery and script-free contact fallback', async (
 
   const withoutScripts = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const fallback = await withoutScripts.newPage();
+  await fallback.goto('./');
+  await expect(fallback.getByRole('heading', { name: 'Someone gets the alert.' })).toBeVisible();
+  await expect(fallback.getByRole('button', { name: 'Play example' })).toBeHidden();
+  await expect(fallback.locator('#contact a[href="tel:+17784754320"]')).toBeVisible();
   await fallback.goto('./quote/');
   await expect(fallback.getByRole('link', { name: 'Hewberry’s contact page' })).toBeVisible();
   await expect(fallback.getByRole('button', { name: 'Continue' })).toBeHidden();
@@ -167,7 +173,7 @@ test('reduced motion, blocked imagery and script-free contact fallback', async (
 
 test('viewport sizes render loaded photography and stay within the screen', async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  for (const [width, height] of [[390, 844], [768, 1024], [1024, 768], [1440, 900], [1920, 1080]]) {
+  for (const [width, height] of [[320, 667], [390, 844], [768, 1024], [844, 390], [1024, 768], [1440, 900], [1920, 1080], [2560, 1080]]) {
     await page.setViewportSize({ width, height });
     await page.goto('./');
     await page.evaluate(() => document.fonts.ready);
@@ -179,12 +185,12 @@ test('viewport sizes render loaded photography and stay within the screen', asyn
     });
     expect(broken, String(width)).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth), String(width)).toBe(width);
-    await expect(page.locator('.hero .hero__actions .button')).toBeInViewport();
+    await expect(page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Contact' })).toBeInViewport();
     await page.screenshot({ path: testInfo.outputPath('home-' + width + '.png'), fullPage: true });
   }
 });
 
-test('axe checks primary pages, the open mobile menu and quote review', async ({ page }) => {
+test('axe checks primary pages, the mobile opening and quote review', async ({ page }) => {
   const scan = async (state: string) => {
     const result = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'])
@@ -198,8 +204,7 @@ test('axe checks primary pages, the open mobile menu and quote review', async ({
   }
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('./');
-  await page.locator('[data-mobile-nav] summary').click();
-  await scan('open mobile menu');
+  await scan('mobile opening');
   await page.goto('./quote/?property=build&priority=wiring');
   await page.getByRole('button', { name: 'Continue' }).click();
   await scan('mobile priorities');

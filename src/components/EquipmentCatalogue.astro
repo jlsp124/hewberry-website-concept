@@ -4,23 +4,24 @@ import { company } from '../lib/site';
 ---
 <section class="catalogue section-space" id="parts-catalogue" aria-labelledby="catalogue-heading">
   <div class="shell">
-    <div class="catalogue__intro">
-      <h2 class="display" id="catalogue-heading">Look up a model.</h2>
-      <p>These models appear in Hewberry’s published parts catalogue. Call the Vernon office to confirm availability, compatibility or replacement options.</p>
-    </div>
-    {catalogueGroups.map(({ id, title, items }) => (
-      <section class="catalogue__group" id={id} aria-labelledby={id + '-title'}>
-        <h3 id={id + '-title'}>{title}</h3>
-        <ul>
-          {items.map(({ name, path, purpose }) => (
-            <li>
-              <a href={company.currentSite + 'product/' + path + '/'}>{name} <span aria-hidden="true">↗</span></a>
-              <p>{purpose}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))}
-    <a class="inline-link" href="https://support.google.com/googlehome/answer/15709068">Google’s Nest Protect support information <span aria-hidden="true">↗</span></a>
+    <h2 class="display" id="catalogue-heading">Already have a system?</h2>
+    <p class="catalogue__caption">Call the Vernon office to check compatibility or find a replacement.</p>
+    <details class="disclosure catalogue__disclosure">
+      <summary>See models from the parts catalogue <span class="plus" aria-hidden="true"></span></summary>
+      {catalogueGroups.map(({ id, title, items }) => (
+        <section class="catalogue__group" id={id} aria-labelledby={id + '-title'}>
+          <h3 id={id + '-title'}>{title}</h3>
+          <ul>
+            {items.map(({ name, path, purpose }) => (
+              <li>
+                <a href={company.currentSite + 'product/' + path + '/'}>{name} <span aria-hidden="true">↗</span></a>
+                <p>{purpose}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+      <a class="inline-link" href="https://support.google.com/googlehome/answer/15709068">Google’s Nest Protect support information <span aria-hidden="true">↗</span></a>
+    </details>
   </div>
 </section>

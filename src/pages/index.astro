@@ -1,39 +1,25 @@
 ---
 import Site from '../layouts/Site.astro';
-import FAQList from '../components/FAQList.astro';
-import Hero from '../components/Hero.astro';
-import Photo from '../components/Photo.astro';
-import QuoteBand from '../components/QuoteBand.astro';
-import Services from '../components/Services.astro';
-import SystemStory from '../components/SystemStory.astro';
-import { company, route } from '../lib/site';
+import PropertyStory from '../components/PropertyStory.astro';
+import HomeSystems from '../components/HomeSystems.astro';
+import ContactPanel from '../components/ContactPanel.astro';
+import '../styles/home.css';
 ---
 <Site
   home
   title="Hewberry Alarms | Security installation and monitoring in Vernon, BC"
-  description="Explore Hewberry Alarms’ residential and commercial security, professional monitoring, and pre-wiring in Vernon and the Okanagan. Independent website concept."
+  description="Hewberry Alarms installs security systems, cameras and door access and provides 24/7 alarm monitoring for homes and businesses in Vernon and the Okanagan."
 >
-  <Hero />
-  <SystemStory />
-  <Services />
-  <section class="local section-space" aria-labelledby="local-heading">
-    <div class="shell local__inner">
-      <div class="local__copy">
-        <div>
-          <p class="eyebrow">Locally owned and operated</p>
-          <h2 id="local-heading" class="display">A Vernon team.</h2>
-        </div>
-        <div class="local__detail">
-          <p>Hewberry works with homeowners, businesses and builders across the Okanagan and beyond.</p>
-          <div class="local__links">
-            <a class="inline-link" href={route('about/')}>About Hewberry <span aria-hidden="true">↗</span></a>
-            <a class="inline-link" href={company.telephone}>{company.phone}</a>
-          </div>
-        </div>
-      </div>
-      <Photo image="valley" class="local__photo" sizes="(min-width: 1778px) 1600px, 90vw" panoramic />
+  <PropertyStory />
+  <HomeSystems />
+  <section class="home-testimonial" aria-label="Customer testimonial">
+    <div class="shell home-testimonial__inner">
+      <span class="home-testimonial__mark" aria-hidden="true">“</span>
+      <figure>
+        <blockquote>Hewberry Alarms provided excellent and timely service, advising us on the best options for our new home…</blockquote>
+        <figcaption><strong>Jack Ledbetter</strong><span>Homeowner</span></figcaption>
+      </figure>
     </div>
   </section>
-  <FAQList />
-  <QuoteBand />
+  <ContactPanel />
 </Site>

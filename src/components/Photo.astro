@@ -1,23 +1,22 @@
 ---
 import { route } from '../lib/site';
 import { photos } from '../lib/photos';
-interface Props { image: keyof typeof photos; sizes?: string; class?: string; panoramic?: boolean }
-const { image, sizes = '(min-width: 850px) 45vw, 94vw', class: className, panoramic = false } = Astro.props;
+interface Props { image: keyof typeof photos; sizes?: string }
+const { image, sizes = '(min-width: 850px) 45vw, 94vw' } = Astro.props;
 const { alt, caption } = photos[image];
-const name = panoramic ? image + '-wide' : image;
-const variants = panoramic ? [720, 1280, 1800] : [640, 1050];
-const photoUrl = (width: number) => route('images/' + name + '-' + width + '.webp');
+const small = route('images/' + image + '-640.webp');
+const large = route('images/' + image + '-1050.webp');
 ---
-<figure class:list={['photo', className]}>
+<figure class="photo">
   <img
-    src={photoUrl(variants[0])}
-    srcset={variants.map((width) => photoUrl(width) + ' ' + width + 'w').join(', ')}
+    src={small}
+    srcset={small + ' 640w, ' + large + ' 1050w'}
     sizes={sizes}
-    width={panoramic ? 1800 : 1050}
-    height={panoramic ? 810 : 840}
+    width="1050"
+    height="840"
     loading="lazy"
     decoding="async"
     alt={alt}
   />
-  <figcaption><a href={route('photo-credits/#' + image)}>{caption} <span aria-hidden="true">↗</span></a></figcaption>
+  <figcaption>{caption}</figcaption>
 </figure>

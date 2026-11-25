@@ -16,10 +16,3 @@ export const company = {
   map: 'https://www.google.com/maps/search/?api=1&query=3410+28th+Ave+Vernon+BC',
   prestige: 'https://prestigemonitoring.com/',
 };
-
-export const navigation = [
-  { name: 'Services', path: '#services' },
-  { name: 'Monitoring', path: 'monitoring/' },
-  { name: 'About', path: 'about/' },
-  { name: 'Customer support', path: 'support/' },
-];

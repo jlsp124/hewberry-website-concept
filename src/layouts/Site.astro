@@ -14,7 +14,7 @@ interface Props {
 const { title, description, home = false } = Astro.props;
 const pageTitle = home ? title : title + ' | Hewberry Alarms';
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const previewImage = new URL(route('images/hero-1440.webp'), Astro.site);
+const previewImage = new URL(route('images/night-home-1600.webp'), Astro.site);
 ---
 <!doctype html>
 <html lang="en-CA">
@@ -38,7 +38,7 @@ const previewImage = new URL(route('images/hero-1440.webp'), Astro.site);
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <Header current={Astro.url.pathname} />
+    <Header home={home} />
     <main id="main" tabindex="-1">
       <slot />
     </main>

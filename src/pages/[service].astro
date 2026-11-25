@@ -1,5 +1,6 @@
 ---
 import Site from '../layouts/Site.astro';
+import AjaxEquipment from '../components/AjaxEquipment.astro';
 import EquipmentCatalogue from '../components/EquipmentCatalogue.astro';
 import Monitoring from '../components/Monitoring.astro';
 import Photo from '../components/Photo.astro';
@@ -29,8 +30,8 @@ const monitoring = service.slug === 'monitoring';
       </div>
     </div>
   </section>
-  {monitoring && <Monitoring detail />}
-  <section class="detail-list section-space" aria-labelledby="options-title">
+  {monitoring && <Monitoring />}
+  {!monitoring && <section class="detail-list section-space" aria-labelledby="options-title">
     <div class="shell detail-layout">
       <div>
         <p class="eyebrow">Options for your property</p>
@@ -43,19 +44,8 @@ const monitoring = service.slug === 'monitoring';
         ))}
       </ul>
     </div>
-  </section>
-  {monitoring && (
-    <section class="station-note section-space">
-      <div class="shell detail-layout">
-        <h2 class="display">Your monitoring station.</h2>
-        <div>
-          <p>The Greater Vernon Chamber lists Hewberry alongside Prestige Monitoring Station Inc. Prestige describes a 24/7 monitoring service based in Kamloops.</p>
-          <p>Check your account paperwork or call Hewberry to confirm who monitors your system and which response instructions apply.</p>
-          <a class="inline-link" href={route('support/')}>Help with an existing system <span aria-hidden="true">↗</span></a>
-        </div>
-      </div>
-    </section>
-  )}
+  </section>}
+  {service.slug === 'technology' && <AjaxEquipment />}
   {service.slug === 'technology' && (
     <section class="station-note section-space">
       <div class="shell detail-layout">

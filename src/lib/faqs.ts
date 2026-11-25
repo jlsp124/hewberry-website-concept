@@ -9,7 +9,7 @@ export const faqs = [
   },
   {
     question: 'What does professional monitoring do?',
-    answer: 'A monitoring station can receive supported signals from your alarm and follow a response plan for your account. Ask Hewberry which signals are covered and who is contacted.',
+    answer: 'An operator at a monitoring centre can receive an alert from your alarm. They follow the instructions you set, such as calling you or another contact.',
   },
   {
     question: 'How do I update my monitoring contacts?',

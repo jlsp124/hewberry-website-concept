@@ -9,7 +9,7 @@ const images = [['home-at-dusk', openingPhoto], ...Object.entries(photos)] as co
     <div class="shell">
       <p class="eyebrow">About this concept</p>
       <h1 class="display">Photography credits.</h1>
-      <p class="page-lead__text">The property and equipment photographs are editorial examples. Kalamalka Lake is shown as photographed near Oyama, British Columbia.</p>
+      <p class="page-lead__text">The photographs are illustrative and show real properties and places. The preview’s source repository records their licences.</p>
     </div>
   </section>
   <section class="section-space">
@@ -19,10 +19,8 @@ const images = [['home-at-dusk', openingPhoto], ...Object.entries(photos)] as co
           <article id={id}>
             <h2>{photo.caption}</h2>
             <p>
-              {photo.author} · <a href={photo.terms}>{photo.license}</a>.
-              {id === 'valley' && ' The WebP variants are cropped and resized and are distributed under the same licence.'}
+              {photo.author} · {photo.license}
             </p>
-            <a class="inline-link" href={photo.source}>View source photograph <span aria-hidden="true">↗</span></a>
           </article>
         ))}
       </div>

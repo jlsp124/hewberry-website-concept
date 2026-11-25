@@ -1,6 +1,6 @@
 # Hewberry Alarms website concept
 
-Independent, public redesign demonstration for a Vernon security installer. It preserves the published company mark and adds a photographed walkthrough of a security system, a 14-model equipment guide, dedicated service pages and customer support. The guided quote simulates a submission using non-identifying service choices held only on the current page.
+Public redesign preview for a Vernon security installer. One real property carries a dusk-to-night story, an animated alarm example leads into the installation table, and the closing section offers a direct call or demo quote. The equipment page includes Ajax examples and Hewberry’s published parts listings. The guided quote simulates a submission using non-identifying service choices held only on the current page.
 
 [Open the live concept](https://jlsp124.github.io/hewberry-website-concept/)
 
@@ -28,13 +28,13 @@ Tests can use an existing Chrome install through `HEWBERRY_BROWSER=chrome`. Set 
 
 | Route | Purpose |
 | --- | --- |
-| `/` and `/#system` | Overview, five illustrated system chapters and service chooser |
+| `/`, `/#system`, `/#services`, `/#contact` | Dusk-to-night story, monitoring example, installation table and contact |
 | `/residential/`, `/commercial/`, `/construction/` | Project-specific guides and prefilled quote routes |
-| `/monitoring/`, `/technology/#parts-catalogue` | Monitoring process, equipment compatibility and guide to all published parts listings |
+| `/monitoring/`, `/technology/#ajax-equipment`, `/technology/#parts-catalogue` | Monitoring process, Ajax examples and the published parts listings |
 | `/about/`, `/about/#service-area` | Local business and coverage |
 | `/support/`, `/support/#faqs` | Office contact, monitoring-account guidance and FAQs |
 | `/quote/` | Property, priorities, review and simulated confirmation |
-| `/photo-credits/` | Actual image sources, credits and licences |
+| `/photo-credits/` | Plain-text photographer and licence credits for the illustrative images |
 
 ## Deployment
 

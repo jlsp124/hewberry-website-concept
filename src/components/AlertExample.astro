@@ -1,0 +1,40 @@
+<div class="alert-example" data-alert-example>
+  <div class="alert-example__heading">
+    <p>Example alert</p>
+    <button type="button" class="alert-example__button" data-play-alert hidden>Play example <span aria-hidden="true">→</span></button>
+  </div>
+  <ol class="alert-route">
+    <li><span class="alert-node" aria-hidden="true"></span>Door sensor</li>
+    <li><span class="alert-node" aria-hidden="true"></span>Alarm panel</li>
+    <li><span class="alert-node" aria-hidden="true"></span>Operator</li>
+  </ol>
+  <p class="visually-hidden" data-alert-result role="status"></p>
+</div>
+<script>
+  for (const example of document.querySelectorAll<HTMLElement>('[data-alert-example]')) {
+    const button = example.querySelector<HTMLButtonElement>('[data-play-alert]');
+    const result = example.querySelector<HTMLElement>('[data-alert-result]');
+    if (!button || !result) continue;
+    const motion = matchMedia('(prefers-reduced-motion: no-preference)');
+    let pending: number | undefined;
+    const finish = () => {
+      example.dataset.alertState = 'complete';
+      result.textContent = 'Example complete. The monitoring operator received the alert.';
+      button.textContent = 'Replay example';
+      button.setAttribute('aria-disabled', 'false');
+    };
+    button.hidden = false;
+    button.addEventListener('click', () => {
+      if (example.dataset.alertState === 'playing') return;
+      window.clearTimeout(pending);
+      result.textContent = '';
+      if (!motion.matches) {
+        finish();
+        return;
+      }
+      example.dataset.alertState = 'playing';
+      button.setAttribute('aria-disabled', 'true');
+      pending = window.setTimeout(finish, 1550);
+    });
+  }
+</script>
