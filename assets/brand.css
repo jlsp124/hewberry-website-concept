@@ -1,0 +1,101 @@
+@font-face {
+  font-family: 'Work Sans';
+  src: url('./work-sans-latin.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+#header-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: .44em;
+}
+
+#header-logo::before,
+#header-logo::after {
+  content: none;
+}
+
+#header-logo .hewberry-shield {
+  display: block;
+  flex: none;
+  width: 1.8em;
+  height: auto;
+  opacity: 1;
+}
+
+.hewberry-shield-outline {
+  fill: #202b47;
+  stroke: #202b47;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.hewberry-shield-bands {
+  fill: #ef3e4c;
+}
+
+.hewberry-wordmark {
+  display: grid;
+  gap: .19em;
+  font: 650 1.02em/1 'Work Sans', sans-serif;
+  letter-spacing: -.04em;
+  text-align: start;
+}
+
+.hewberry-wordmark span {
+  font-size: .61em;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+#preloader.hewberry-splash {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+#preloader.hewberry-splash:not([data-complete]) {
+  background-color: #fff;
+}
+
+#preloader.hewberry-splash[hidden] {
+  display: none;
+}
+
+.hewberry-splash .hewberry-shield {
+  display: block;
+  width: clamp(5rem, 8.1vw, 6.9rem);
+  height: auto;
+}
+
+.hewberry-splash .hewberry-shield-outline {
+  fill: none;
+  transition: stroke .28s ease-out;
+}
+
+.hewberry-splash-fill {
+  transform: translateY(calc((1 - var(--splash-progress, 0)) * 94px));
+}
+
+#preloader.hewberry-splash[data-complete] {
+  background-color: #0b0b0d;
+  transition: background-color .32s cubic-bezier(.35, 0, .3, 1);
+}
+
+.hewberry-splash[data-complete] .hewberry-shield-outline {
+  stroke: #eef1f7;
+}
+
+@media (max-width: 812px) {
+  #header-logo .hewberry-shield { width: 1.6em; }
+  .hewberry-wordmark { font-size: .94em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #preloader.hewberry-splash[data-complete],
+  .hewberry-splash .hewberry-shield-outline { transition: none; }
+}

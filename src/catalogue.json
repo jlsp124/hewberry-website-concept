@@ -1,0 +1,246 @@
+[
+  {
+    "id": "doorprotect",
+    "name": "DoorProtect",
+    "detail": "Detects an opening door or window.",
+    "category": "Detection",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/doorprotect/"
+  },
+  {
+    "id": "motionprotect",
+    "name": "MotionProtect",
+    "detail": "Detects movement indoors.",
+    "category": "Detection",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/motionprotect/"
+  },
+  {
+    "id": "motioncam",
+    "name": "MotionCam",
+    "detail": "Detects motion and takes photos to help verify an alarm.",
+    "category": "Detection",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/motioncam/"
+  },
+  {
+    "id": "glassprotect",
+    "name": "GlassProtect",
+    "detail": "Listens for the sound of breaking glass.",
+    "category": "Detection",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/glassprotect/"
+  },
+  {
+    "id": "homesiren",
+    "name": "HomeSiren",
+    "detail": "Sounds an indoor alarm.",
+    "category": "Detection",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/homesiren/"
+  },
+  {
+    "id": "hub-2",
+    "name": "Hub 2",
+    "detail": "Connects the devices and sends alarm alerts.",
+    "category": "Control",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/hub-2/"
+  },
+  {
+    "id": "keypad-plus",
+    "name": "KeyPad Plus",
+    "detail": "Arms and disarms the alarm with a code, tag or card.",
+    "category": "Control",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/keypad-plus/"
+  },
+  {
+    "id": "doorbell",
+    "name": "DoorBell",
+    "detail": "Shows who is at the door and lets you talk with them.",
+    "category": "Video",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/doorbell/"
+  },
+  {
+    "id": "turretcam",
+    "name": "TurretCam",
+    "detail": "Provides a fixed view of an indoor or outdoor area.",
+    "category": "Video",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/turretcam-jeweller/"
+  },
+  {
+    "id": "nvr",
+    "name": "NVR",
+    "detail": "Records and stores footage from compatible cameras.",
+    "category": "Video",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/nvr/"
+  },
+  {
+    "id": "fireprotect",
+    "name": "FireProtect 2",
+    "detail": "Detects smoke and heat. Some versions also detect carbon monoxide.",
+    "category": "Fire and water",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/fireprotect-2/"
+  },
+  {
+    "id": "leaksprotect",
+    "name": "LeaksProtect",
+    "detail": "Alerts you when it detects water on the floor.",
+    "category": "Fire and water",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/leaksprotect/"
+  },
+  {
+    "id": "waterstop",
+    "name": "WaterStop",
+    "detail": "Can shut off the water when a compatible sensor detects a leak.",
+    "category": "Fire and water",
+    "group": "ajax",
+    "link": "https://ajax.systems/products/waterstop/"
+  },
+  {
+    "id": "catalogue-1",
+    "name": "DSC Alexor",
+    "fullName": "Alexor 2-Way Wireless Security Control Panel",
+    "detail": "Controls a compatible wireless alarm system.",
+    "category": "Alarm equipment",
+    "group": "listed",
+    "sourceSlug": "alexor-2-way-wireless-security-control-panel",
+    "link": "https://www.hewberryalarms.ca/product/alexor-2-way-wireless-security-control-panel/"
+  },
+  {
+    "id": "catalogue-2",
+    "name": "DSC PowerSeries PC1616",
+    "fullName": "PowerSeries Control Panel PC1616",
+    "detail": "Central controller for a compatible PowerSeries alarm system.",
+    "category": "Alarm equipment",
+    "group": "listed",
+    "sourceSlug": "powerseries-control-panel",
+    "link": "https://www.hewberryalarms.ca/product/powerseries-control-panel/"
+  },
+  {
+    "id": "catalogue-3",
+    "name": "DSC PowerSeries PC1832",
+    "fullName": "PowerSeries Control Panel PC1832",
+    "detail": "Central controller for a compatible PowerSeries alarm system.",
+    "category": "Alarm equipment",
+    "group": "listed",
+    "sourceSlug": "powerseries-control-panel-pc1832",
+    "link": "https://www.hewberryalarms.ca/product/powerseries-control-panel-pc1832/"
+  },
+  {
+    "id": "catalogue-4",
+    "name": "DSC PowerSeries PC1864",
+    "fullName": "PowerSeries Control Panel PC1864",
+    "detail": "Central controller for a compatible PowerSeries alarm system.",
+    "category": "Alarm equipment",
+    "group": "listed",
+    "sourceSlug": "powerseries-control-panel-pc1864",
+    "link": "https://www.hewberryalarms.ca/product/powerseries-control-panel-pc1864/"
+  },
+  {
+    "id": "catalogue-5",
+    "name": "DSC Impassa",
+    "fullName": "IMPASSA SCW9057",
+    "detail": "Self-contained wireless alarm system.",
+    "category": "Alarm equipment",
+    "group": "listed",
+    "sourceSlug": "impassa-self-contained-2-way-wireless-security-system-scw9057",
+    "link": "https://www.hewberryalarms.ca/product/impassa-self-contained-2-way-wireless-security-system-scw9057/"
+  },
+  {
+    "id": "catalogue-6",
+    "name": "12 V alarm battery",
+    "fullName": "12 V 7 Ah replacement alarm battery",
+    "detail": "Backup power for compatible equipment.",
+    "category": "Alarm equipment",
+    "group": "listed",
+    "sourceSlug": "12v-7ah-alarm-home-security-system-repl-battery",
+    "link": "https://www.hewberryalarms.ca/product/12v-7ah-alarm-home-security-system-repl-battery/"
+  },
+  {
+    "id": "catalogue-7",
+    "name": "Nest Protect",
+    "fullName": "Google Nest Protect, 2nd generation",
+    "detail": "Smoke and carbon monoxide alarm. Google still supports existing devices and has stopped selling it.",
+    "category": "Alarm equipment",
+    "group": "listed",
+    "sourceSlug": "google-nest-protect-smoke-and-carbon-monoxide-alarm-with-battery-2nd-generation",
+    "link": "https://www.hewberryalarms.ca/product/google-nest-protect-smoke-and-carbon-monoxide-alarm-with-battery-2nd-generation/"
+  },
+  {
+    "id": "catalogue-8",
+    "name": "Nest Cam Indoor",
+    "fullName": "Google Nest Cam Indoor",
+    "detail": "Video for indoor spaces.",
+    "category": "Cameras and doorbells",
+    "group": "listed",
+    "sourceSlug": "google-nest-cam-indoor-security-camera",
+    "link": "https://www.hewberryalarms.ca/product/google-nest-cam-indoor-security-camera/"
+  },
+  {
+    "id": "catalogue-9",
+    "name": "Nest Cam Outdoor",
+    "fullName": "Google Nest Cam Outdoor",
+    "detail": "Video for outdoor areas.",
+    "category": "Cameras and doorbells",
+    "group": "listed",
+    "sourceSlug": "google-nest-cam-outdoor-security-camera",
+    "link": "https://www.hewberryalarms.ca/product/google-nest-cam-outdoor-security-camera/"
+  },
+  {
+    "id": "catalogue-10",
+    "name": "Nest Hello",
+    "fullName": "Google Nest Hello Video Doorbell",
+    "detail": "Shows activity at the door on a compatible screen or app.",
+    "category": "Cameras and doorbells",
+    "group": "listed",
+    "sourceSlug": "google-nest-hello-video-doorbell",
+    "link": "https://www.hewberryalarms.ca/product/google-nest-hello-video-doorbell/"
+  },
+  {
+    "id": "catalogue-11",
+    "name": "Nest Wifi",
+    "fullName": "Google Nest Wifi AC2200, two-pack",
+    "detail": "Mesh Wi-Fi equipment for a home network.",
+    "category": "Connected home",
+    "group": "listed",
+    "sourceSlug": "google-nest-wifi-ac2200-mesh-wifi-system-wifi-router-4400-sq-ft-coverage-2-pack",
+    "link": "https://www.hewberryalarms.ca/product/google-nest-wifi-ac2200-mesh-wifi-system-wifi-router-4400-sq-ft-coverage-2-pack/"
+  },
+  {
+    "id": "catalogue-12",
+    "name": "Nest Hub",
+    "fullName": "Google Nest Hub with Assistant",
+    "detail": "A smart display for compatible connected devices.",
+    "category": "Connected home",
+    "group": "listed",
+    "sourceSlug": "google-nest-hub-with-assistant",
+    "link": "https://www.hewberryalarms.ca/product/google-nest-hub-with-assistant/"
+  },
+  {
+    "id": "catalogue-13",
+    "name": "Nest Hub Gen 2",
+    "fullName": "Google Nest Hub Gen 2",
+    "detail": "A second-generation smart display for compatible devices.",
+    "category": "Connected home",
+    "group": "listed",
+    "sourceSlug": "google-nest-hub-gen-2",
+    "link": "https://www.hewberryalarms.ca/product/google-nest-hub-gen-2/"
+  },
+  {
+    "id": "catalogue-14",
+    "name": "Nest Learning Thermostat",
+    "fullName": "Google Nest Learning Thermostat, 3rd Gen",
+    "detail": "A connected thermostat for compatible heating and cooling equipment.",
+    "category": "Connected home",
+    "group": "listed",
+    "sourceSlug": "google-nest-learning-thermostat-3rd-gen",
+    "link": "https://www.hewberryalarms.ca/product/google-nest-learning-thermostat-3rd-gen/"
+  }
+]

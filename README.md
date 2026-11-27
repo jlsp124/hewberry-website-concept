@@ -1,49 +1,11 @@
 # Hewberry Alarms website concept
 
-Public redesign preview for a Vernon security installer. A filmed home exterior and a sourced Vernon statistic introduce a full-viewport alarm story. The Systems page presents installation services and a filterable Ajax photo gallery. The Contact page offers direct office details and a short demo form.
+An independent website concept for Hewberry Alarms in Vernon, British Columbia. [View the website](https://jlsp124.github.io/hewberry-website-concept/)
 
-[Open the live concept](https://jlsp124.github.io/hewberry-website-concept/)
+Run `npm run build` with Node.js 22 or newer. The build writes plain HTML, CSS, JavaScript and site assets to `dist/`. Serve that folder over HTTP for a local preview. The existing GitHub Pages workflow builds and deploys it from `main`.
 
-## Run locally
+Contact opens an email draft for the visitor to review and send. The publication is static.
 
-Use Node 24.11.1 or a newer Node 24 release.
+The dusk photograph was adapted from a photograph by Littlehampton Bricks. Company branding and catalogue imagery come from the existing Hewberry project. Equipment imagery depicts Ajax products. Work Sans is distributed under the bundled SIL Open Font License. [Original photograph](https://www.pexels.com/photo/modern-house-facade-with-glowing-lights-at-dusk-4626268/) · [Ajax product information](https://ajax.systems/products/turretcam/)
 
-```sh
-npm ci
-npm run dev
-```
-
-Visit `http://localhost:4321/hewberry-website-concept/`. To verify the deployable build, run the type check, build and browser suite.
-
-```sh
-npm run check
-npm run build
-npx playwright install chromium
-npm test
-```
-
-Tests can use an existing Chrome install through `HEWBERRY_BROWSER=chrome`. Set `HEWBERRY_TEST_URL` to a full base URL with a trailing slash to test a running preview or deployment. Playwright writes full-page captures to `test-results/`.
-
-## Site map
-
-| Route | Purpose |
-| --- | --- |
-| `/`, `/#system` | Filmed opening, local statistic and three-scene alarm story |
-| `/systems/`, `/systems/#equipment` | Installation services and Ajax equipment gallery |
-| `/residential/`, `/commercial/`, `/construction/` | Project-specific guides and prefilled contact links |
-| `/monitoring/`, `/technology/#ajax-equipment`, `/technology/#parts-catalogue` | Monitoring process, link to the Ajax gallery and published parts listings |
-| `/about/`, `/about/#service-area` | Local business and coverage |
-| `/support/`, `/support/#faqs` | Office contact, monitoring-account guidance and FAQs |
-| `/contact/`, `/quote/` | Direct office details and the same short demo form through either route |
-| `/photo-credits/` | Plain-text credits for the illustrative footage and images |
-
-## Deployment
-
-GitHub Pages serves the static `dist/` build at the repository subpath. The workflow checks Astro types, builds, then publishes with scoped Pages permissions. The demo is publicly reachable and marked `noindex` so it can be shared directly while avoiding competition with Hewberry's official website in search. The optional `CONCEPT_ORIGIN` and `CONCEPT_BASE` environment variables support other hosts.
-
-The contact preview keeps form values on the current page. Before an official launch, confirm equipment, approved media and message routing with Hewberry. Review redirects and indexing when moving to the production domain.
-
-- [Company and design research](docs/research.md)
-- [Creative directions](docs/creative-direction.md)
-- [Asset inventory](docs/assets.md)
-- [Verification](docs/qa.md)
+The B.C. breaking-and-entering statistic comes from Statistics Canada table 35-10-0177-01, vector 44343062. [Statistics Canada](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3510017701)
