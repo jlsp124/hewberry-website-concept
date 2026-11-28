@@ -2,7 +2,11 @@ import { createStoryScroll } from './story-scroll.js';
 
 const body = document.body;
 const page = document.documentElement;
+const sceneTheme = document.querySelector('meta[name="theme-color"]');
+const sceneColors = { photo: '#151d2e', paper: '#ffffff', mounted: '#272323', dark: '#14161b' };
+page.style.setProperty('--scene-color', sceneColors.photo);
 const intro = document.querySelector('[data-opening-story]');
+const openingPin = intro.firstElementChild;
 const photo = intro.querySelector('.photo-opening');
 const statistic = intro.querySelector('.story-stat');
 const count = statistic.querySelector('[data-count-to]');
@@ -16,6 +20,8 @@ const contact = document.querySelector('.story-contact');
 const ending = contact.parentElement;
 const footer = ending.querySelector('.site-footer');
 const motion = matchMedia('(prefers-reduced-motion: no-preference)');
+const coarsePointer = matchMedia('(any-pointer: coarse)');
+const viewport = window.visualViewport;
 const galleryStart = .234;
 const galleryEnd = .744;
 const statStop = .93;
@@ -30,9 +36,10 @@ const rise = (progress, start, end) => `${(1 - expoOut(between(progress, start, 
 const pinnedTravel = (stage) => Math.max(1, stage.offsetHeight - stage.firstElementChild.offsetHeight);
 const stageTop = (stage) => window.scrollY + stage.getBoundingClientRect().top;
 const stageStop = (stage, phase) => stageTop(stage) + pinnedTravel(stage) * phase;
-const lastStop = () => page.scrollHeight - innerHeight;
+const lastStop = () => page.scrollHeight - page.clientHeight;
 
 let frame = 0;
+let viewportFrame = 0;
 let previousOpening = -1;
 let previousStatExit = -1;
 let previousReel = -1;
@@ -126,35 +133,62 @@ function paintEquipment(progress, expand, black) {
   }
 }
 
+function setScene(scene) {
+  if (body.dataset.scene === scene) return;
+  body.dataset.scene = scene;
+  sceneTheme.content = sceneColors[scene];
+  page.style.setProperty('--scene-color', sceneColors[scene]);
+}
+
 function paint() {
   frame = 0;
   const closing = contact.getBoundingClientRect().top < 54;
   const footerTop = footer.getBoundingClientRect().top;
   if (!motion.matches) {
-    const firstScreen = photo.getBoundingClientRect().bottom > innerHeight * .52;
+    const firstScreen = photo.getBoundingClientRect().bottom > photo.offsetHeight * .52;
     applyLogo(firstScreen ? 1 : 0, logo.offsetWidth);
-    body.dataset.scene = closing && footerTop > 54 ? 'dark' : firstScreen ? 'photo' : 'paper';
+    setScene(closing && footerTop > 54 ? 'dark' : firstScreen ? 'photo' : 'paper');
     return;
   }
 
+  const sceneHeight = openingPin.offsetHeight;
   const openingScrolled = -intro.getBoundingClientRect().top;
   const openingTravel = pinnedTravel(intro);
   const opening = clamp(openingScrolled / openingTravel);
-  const statExit = eased(openingScrolled - openingTravel, 0, innerHeight * .25);
+  const statExit = eased(openingScrolled - openingTravel, 0, sceneHeight * .25);
   const reel = clamp(-sequence.getBoundingClientRect().top / pinnedTravel(sequence));
   const fade = eased(opening, .115, .55);
   const expand = eased(reel, .755, .878);
   const black = eased(reel, .943, 1);
   paintOpening(opening, statExit, fade);
   paintEquipment(reel, expand, black);
-  const footerCoveringAction = footerTop < innerHeight * .59;
+  const footerCoveringAction = footerTop < sceneHeight * .59;
   if (contact.inert !== footerCoveringAction) contact.inert = footerCoveringAction;
   const scene = footerTop < 54 ? 'paper' : closing || black > .3 ? 'dark' : expand > .78 ? 'mounted' : fade < .49 ? 'photo' : 'paper';
-  if (body.dataset.scene !== scene) body.dataset.scene = scene;
+  setScene(scene);
 }
 
 function schedule() {
   if (!frame) frame = requestAnimationFrame(paint);
+}
+
+function refreshViewport() {
+  viewportFrame = 0;
+  const touch = coarsePointer.matches;
+  const zoomed = viewport && Math.abs(viewport.scale - 1) > .02;
+  page.classList.toggle('story-touch', touch && motion.matches && !zoomed);
+  if (touch && !zoomed) {
+    const height = Math.round(viewport?.height ?? window.innerHeight);
+    body.style.setProperty('--scene-height', `${height}px`);
+  } else if (!touch) {
+    body.style.removeProperty('--scene-height');
+  }
+  scroll.refreshLayout();
+  schedule();
+}
+
+function scheduleViewport() {
+  if (!viewportFrame) viewportFrame = requestAnimationFrame(refreshViewport);
 }
 
 function seekScene(hash, animate) {
@@ -178,7 +212,9 @@ document.addEventListener('click', (event) => {
 
 window.addEventListener('hashchange', () => seekScene(location.hash, false));
 window.addEventListener('scroll', schedule, { passive: true });
-window.addEventListener('resize', schedule, { passive: true });
+window.addEventListener('resize', scheduleViewport, { passive: true });
+viewport?.addEventListener('resize', scheduleViewport, { passive: true });
+coarsePointer.addEventListener('change', scheduleViewport);
 
 new IntersectionObserver(([entry], observer) => {
   if (!entry.isIntersecting) return;
@@ -205,14 +241,15 @@ function configure() {
     contact.inert = false;
     count.textContent = numberFormat.format(total);
   }
+  refreshViewport();
   requestAnimationFrame(restoreScroll);
-  schedule();
 }
 
 window.addEventListener('pageshow', (event) => {
+  scheduleViewport();
   if (!event.persisted && performance.getEntriesByType('navigation')[0]?.type === 'back_forward') restoreScroll();
 });
 
 motion.addEventListener('change', configure);
-document.fonts?.ready.then(schedule);
+document.fonts?.ready.then(scheduleViewport);
 configure();

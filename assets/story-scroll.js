@@ -1,22 +1,40 @@
 const springRate = 12;
+const touchSpringRate = 9.5;
 const wheelPause = 135;
 const wheelThreshold = 12;
 const sustainedWheelThreshold = 560;
 
+function nearestStop(stops, y) {
+  let nearest = 0;
+  for (let index = 1; index < stops.length; index += 1) {
+    if (Math.abs(stops[index] - y) < Math.abs(stops[nearest] - y)) nearest = index;
+  }
+  return nearest;
+}
+
+function projectPosition(y, before, after) {
+  if (y <= before[0]) return after[0];
+  const next = before.findIndex((stop) => stop >= y);
+  if (next === -1) return after.at(-1);
+  const progress = (y - before[next - 1]) / (before[next] - before[next - 1]);
+  return after[next - 1] + (after[next] - after[next - 1]) * progress;
+}
+
 export function createStoryScroll(getStops, enabled) {
+  const touchEnabled = () => enabled() && document.documentElement.classList.contains('story-touch');
+  let stops = [];
   let frame = 0;
   let position = 0;
   let destination = 0;
   let velocity = 0;
   let lastFrame = 0;
   let lastWrite = 0;
+  let rate = springRate;
   let wheelDirection = 0;
   let wheelDistance = 0;
   let lastWheel = -Infinity;
   let lastStep = -Infinity;
-  let touchStart = null;
-  let touchHeld = false;
-  let touchSettle = 0;
+  let gesture = null;
 
   function cancel() {
     cancelAnimationFrame(frame);
@@ -29,6 +47,23 @@ export function createStoryScroll(getStops, enabled) {
     lastWrite = window.scrollY;
   }
 
+  function refreshLayout() {
+    const previous = stops;
+    stops = enabled() ? getStops() : [];
+    if (!previous.length || previous.length !== stops.length ||
+      previous.every((stop, index) => Math.abs(stop - stops[index]) < .5)) return;
+    if (gesture?.claimed) gesture.startScroll = projectPosition(gesture.startScroll, previous, stops);
+    if (frame) {
+      position = projectPosition(position, previous, stops);
+      destination = projectPosition(destination, previous, stops);
+      writeScroll(position);
+    } else {
+      const current = window.scrollY;
+      const end = stops.at(-1);
+      writeScroll(Math.abs(current - end) < 2 ? end : projectPosition(current, previous, stops));
+    }
+  }
+
   function tick(now) {
     if (!enabled() || Math.abs(window.scrollY - lastWrite) > 3) {
       cancel();
@@ -38,10 +73,10 @@ export function createStoryScroll(getStops, enabled) {
     lastFrame = now;
     // Solve the damped spring over the elapsed time so refresh rate does not change the glide.
     const offset = position - destination;
-    const travel = (velocity + springRate * offset) * time;
-    const decay = Math.exp(-springRate * time);
+    const travel = (velocity + rate * offset) * time;
+    const decay = Math.exp(-rate * time);
     position = destination + (offset + travel) * decay;
-    velocity = (velocity - springRate * travel) * decay;
+    velocity = (velocity - rate * travel) * decay;
     if (Math.abs(position - destination) < 1.25 && Math.abs(velocity) < 24) {
       cancel();
       writeScroll(destination);
@@ -52,8 +87,10 @@ export function createStoryScroll(getStops, enabled) {
   }
 
   function goTo(y, animate = true) {
-    const limit = document.documentElement.scrollHeight - window.innerHeight;
+    const root = document.documentElement;
+    const limit = root.scrollHeight - root.clientHeight;
     destination = Math.min(Math.max(0, y), Math.max(0, limit));
+    rate = touchEnabled() ? touchSpringRate : springRate;
     if (!animate || !enabled()) {
       cancel();
       writeScroll(destination);
@@ -70,7 +107,6 @@ export function createStoryScroll(getStops, enabled) {
   }
 
   function advance(direction) {
-    const stops = getStops();
     const current = window.scrollY;
     const from = frame && (destination - current) * direction > 0 ? destination : current;
     const next = direction > 0
@@ -115,46 +151,62 @@ export function createStoryScroll(getStops, enabled) {
       advance(down || (space && !event.shiftKey) ? 1 : -1);
     } else if (event.key === 'Home' || event.key === 'End') {
       event.preventDefault();
-      const stops = getStops();
       goTo(event.key === 'Home' ? stops[0] : stops.at(-1));
     }
   });
 
-  function queueTouchSettle() {
-    clearTimeout(touchSettle);
-    touchSettle = setTimeout(() => {
-      const from = touchStart;
-      touchStart = null;
-      if (!enabled() || from === null || Math.abs(window.scrollY - from) < 36) return;
-      const stops = getStops();
-      const current = window.scrollY;
-      const nearest = stops.reduce((best, stop) => Math.abs(stop - current) < Math.abs(best - current) ? stop : best);
-      const deliberate = Math.abs(current - from) >= Math.min(112, innerHeight * .14);
-      if (Math.abs(nearest - from) < 10 && deliberate) advance(Math.sign(current - from));
-      else goTo(nearest);
-    }, 135);
-  }
-
   window.addEventListener('touchstart', (event) => {
-    clearTimeout(touchSettle);
-    touchStart = null;
-    if (!enabled()) return;
-    cancel();
-    if (event.touches.length !== 1) return;
-    touchStart = window.scrollY;
-    touchHeld = true;
+    if (!touchEnabled() || event.touches.length !== 1) {
+      gesture = null;
+      return;
+    }
+    const finger = event.touches[0];
+    gesture = { x: finger.clientX, y: finger.clientY, id: finger.identifier, distance: 0, claimed: false };
   }, { passive: true });
 
-  function finishTouch() {
-    touchHeld = false;
-    if (touchStart !== null) queueTouchSettle();
+  function touchDestination(origin, distance) {
+    const next = Math.min(stops.length - 1, Math.max(0, origin + Math.sign(distance)));
+    return stops[next];
   }
+
+  window.addEventListener('touchmove', (event) => {
+    if (!gesture || !touchEnabled() || event.touches.length !== 1) return;
+    const finger = event.touches[0];
+    if (finger.identifier !== gesture.id) return;
+    const vertical = gesture.y - finger.clientY;
+    if (!gesture.claimed) {
+      const horizontal = Math.abs(gesture.x - finger.clientX);
+      if (horizontal > 9 && horizontal > Math.abs(vertical)) {
+        gesture = null;
+        return;
+      }
+      if (Math.abs(vertical) < 8 || !event.cancelable) return;
+      cancel();
+      gesture.claimed = true;
+      gesture.startScroll = window.scrollY;
+      gesture.origin = nearestStop(stops, gesture.startScroll);
+    }
+    if (event.cancelable) event.preventDefault();
+    gesture.distance = vertical;
+    const destination = touchDestination(gesture.origin, vertical);
+    const remaining = destination - gesture.startScroll;
+    // Keep the drag preview within the current transition. The release commits the adjacent scene.
+    const preview = Math.min(Math.abs(vertical) * .52, Math.abs(remaining) * .28);
+    writeScroll(gesture.startScroll + Math.sign(remaining) * preview);
+  }, { passive: false });
+
+  function finishTouch(event) {
+    const swipe = gesture;
+    gesture = null;
+    if (!swipe?.claimed || !touchEnabled()) return;
+    const height = window.visualViewport?.height ?? window.innerHeight;
+    const threshold = Math.min(76, Math.max(47, height * .095));
+    const advance = event.type === 'touchend' && Math.abs(swipe.distance) >= threshold;
+    goTo(advance ? touchDestination(swipe.origin, swipe.distance) : stops[swipe.origin]);
+  }
+
   window.addEventListener('touchend', finishTouch, { passive: true });
   window.addEventListener('touchcancel', finishTouch, { passive: true });
-  window.addEventListener('scroll', () => {
-    if (touchStart !== null && !touchHeld) queueTouchSettle();
-  }, { passive: true });
-  window.addEventListener('resize', cancel, { passive: true });
 
-  return { goTo, cancel };
+  return { goTo, cancel, refreshLayout };
 }

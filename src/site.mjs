@@ -27,7 +27,7 @@ const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => (
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 }[character]));
 
-function actionLabel(text, arrow = '↗') {
+function actionLabel(text, arrow = '↗︎') {
   return `<span class="action-arrow" aria-hidden="true">${arrow}</span><span class="action-label">${text}</span><span class="action-dot" aria-hidden="true"></span>`;
 }
 
@@ -55,9 +55,9 @@ function header(page, root, assets) {
     </a>
     <div class="header-actions">${navigation}</div>
     ${contact ? '' : `<nav class="site-menu" id="main-menu" aria-label="Main navigation" hidden>
-      <a href="${section}#why">${rollingLabel('Why security')}<span class="menu-arrow" aria-hidden="true">↗</span></a>
-      <a href="${section}#equipment">${rollingLabel('Equipment')}<span class="menu-arrow" aria-hidden="true">↗</span></a>
-      <a href="${root}contact/" data-route-transition>${rollingLabel('Contact')}<span class="menu-arrow" aria-hidden="true">↗</span></a>
+      <a href="${section}#why">${rollingLabel('Why security')}<span class="menu-arrow" aria-hidden="true">↗︎</span></a>
+      <a href="${section}#equipment">${rollingLabel('Equipment')}<span class="menu-arrow" aria-hidden="true">↗︎</span></a>
+      <a href="${root}contact/" data-route-transition>${rollingLabel('Contact')}<span class="menu-arrow" aria-hidden="true">↗︎</span></a>
     </nav>`}
   </div>
 </header>`;
@@ -73,8 +73,8 @@ function footer(root) {
       <a href="${addressLink}">3410 28th Ave, Vernon, BC</a>
     </address>
     <nav class="footer-links" aria-label="Footer">
-      <a class="text-link-arrow" href="${root}equipment/">Equipment <span aria-hidden="true">↗</span></a>
-      <a class="text-link-arrow" href="${root}contact/" data-route-transition>Contact <span aria-hidden="true">↗</span></a>
+      <a class="text-link-arrow" href="${root}equipment/">Equipment <span aria-hidden="true">↗︎</span></a>
+      <a class="text-link-arrow" href="${root}contact/" data-route-transition>Contact <span aria-hidden="true">↗︎</span></a>
     </nav>
   </div>
 </footer>`;
@@ -136,7 +136,7 @@ function equipmentGrid(items, equipmentAssets, eagerCount = 0) {
     return `<article class="equipment-item" data-equipment-group="${escapeHtml(item.group)}">
       <a class="equipment-link" href="${escapeHtml(item.link)}" target="_blank" rel="noopener" aria-label="${title} (opens in a new tab)">
         <div class="equipment-image"><img src="${equipmentAssets}${escapeHtml(item.id)}/home.webp" alt="" width="880" height="580" loading="${index < eagerCount ? 'eager' : 'lazy'}" decoding="async"></div>
-        <div class="equipment-label"><span class="equipment-class">${escapeHtml(item.category)}</span><span aria-hidden="true">↗</span></div>
+        <div class="equipment-label"><span class="equipment-class">${escapeHtml(item.category)}</span><span aria-hidden="true">↗︎</span></div>
         <h3>${escapeHtml(item.name)}</h3>
       </a>
     </article>`;
@@ -194,11 +194,11 @@ export function renderSite(page, items, receipt = false, { staticSite = false, p
 <html lang="en-CA" data-type="service">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="${description}">
   <meta name="page-type" content="service">
   <meta name="site-kind" content="other">
-  <meta name="theme-color" content="#f6f6f3">
+  <meta name="theme-color" content="${home ? '#151d2e' : '#f6f6f3'}">
   <meta name="robots" content="noindex">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">

@@ -59,7 +59,7 @@ function opening(assets) {
         <div class="stat-copy">
           <p class="stat-label text-mask"><span>Break-ins reported to police in B.C. in 2025.</span></p>
           <p class="stat-note text-mask"><span>When you’re away, it matters knowing which door opened and what’s happening outside.</span></p>
-          <div class="text-mask"><span><a class="stat-source text-link-arrow" href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3510017701">Statistics Canada <span aria-hidden="true">↗</span></a></span></div>
+          <div class="text-mask"><span><a class="stat-source text-link-arrow" href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3510017701">Statistics Canada <span aria-hidden="true">↗︎</span></a></span></div>
         </div>
       </div>
     </section>
